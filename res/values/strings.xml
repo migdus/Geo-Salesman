@@ -1,0 +1,18 @@
+<resources>
+
+    <string name="app_name">Geo Salesman</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_geo_salesman">GeoSalesman</string>
+    <string name="title_activity_settings">Settings</string>
+    <!-- Main menu -->
+    <string name="new_report">New Report</string>
+    <string name="new_report_short_description">Create a new report</string>
+    <string name="stored_report">Stored Reports</string>
+    <string name="stored_report_short_description">Show not send reports</string>
+    <string name="send_reports">Send Reports</string>
+    <string name="send_reports_short_description">Use email to send reports</string>
+    <string name="settings">Settings</string>
+    <string name="settings_short_description">Settings</string>
+
+</resources>
