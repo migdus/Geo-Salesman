@@ -15,22 +15,33 @@ public class SchemaHelper extends SQLiteOpenHelper {
 
 	@Override
     public void onCreate(SQLiteDatabase db) {
+		final String pk =" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL";
+		final String textNotNull = " TEXT  NOT NULL";
+		final String integerNotNull = " INTEGER NOT NULL";
         // Create ClientTable
-    	db.execSQL("CREATE TABLE ");
+    	db.execSQL("CREATE TABLE "+ ClientTable.TABLE_NAME + " ("
+    			+ ClientTable.ID + pk+ ","
+    			+ ClientTable.NAME + textNotNull + ","
+    			+ ClientTable.PHONE_NUMBER + integerNotNull + ","
+    			+ ClientTable.ADDRESS + textNotNull + ","
+    			+ ClientTable.ADDRESS + textNotNull+");");
+    			
     	//Create QuestionTable
     	db.execSQL("CREATE TABLE " + QuestionTable.TABLE_NAME + " ("
-    			+ QuestionTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-    			+ QuestionTable.QUESTION + " TEXT  NOT NULL,"
-    			+ QuestionTable.QUESTION_DESCRIPTION + " TEXT  NOT NULL,"
-    			+ QuestionTable.QUESTION_TYPE + " TEXT  NOT NULL, "
-    			+ QuestionTable.ANSWER_OPTIONS + " TEXT  NOT NULL);");	
+    			+ QuestionTable.ID + pk + ","
+    			+ QuestionTable.QUESTION + textNotNull+ ","
+    			+ QuestionTable.QUESTION_DESCRIPTION + textNotNull+ ","
+    			+ QuestionTable.QUESTION_TYPE + textNotNull+ ","
+    			+ QuestionTable.ANSWER_OPTIONS + textNotNull+");");	
+    	
     	//Create ReportTable
+    	
     	//Create ReportTemplateTable
 }
 
 	@Override
 	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
