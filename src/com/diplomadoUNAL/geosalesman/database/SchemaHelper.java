@@ -32,6 +32,7 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		// Create QuestionTable
 		db.execSQL("CREATE TABLE " + QuestionTable.TABLE_NAME + " ("
 				+ QuestionTable.ID + pk + "," + QuestionTable.QUESTION
+				+ textNotNull + "," + QuestionTable.QUESTION_TITLE
 				+ textNotNull + "," + QuestionTable.QUESTION_DESCRIPTION
 				+ textNotNull + "," + QuestionTable.QUESTION_TYPE + textNotNull
 				+ "," + QuestionTable.ANSWER_OPTIONS + textNotNull + ");");
@@ -46,10 +47,10 @@ public class SchemaHelper extends SQLiteOpenHelper {
 
 		// Create ReportTemplateTable
 		db.execSQL("CREATE TABLE " + ReportTemplateTable.TABLE_NAME + " ("
-				+ ReportTemplateTable.ID + pk + ","
-				+ ReportTemplateTable.NAME + textNotNull + ","
-				+ ReportTemplateTable.DESCRIPTION + textNotNull + ","
-				+ ReportTemplateTable.QUESTION_ID + integerNotNull + ");");
+				+ ReportTemplateTable.ID + pk + "," + ReportTemplateTable.NAME
+				+ textNotNull + "," + ReportTemplateTable.DESCRIPTION
+				+ textNotNull + "," + ReportTemplateTable.QUESTION_ID
+				+ integerNotNull + ");");
 	}
 
 	@Override
@@ -79,9 +80,11 @@ public class SchemaHelper extends SQLiteOpenHelper {
 	}
 
 	// Wrapper method for adding a question
-	public long addQuestion(String question, String questionDescription,
-			String questionType, String answerOptions) {
+	public long addQuestion(String questionTitle, String question,
+			String questionDescription, String questionType,
+			String answerOptions) {
 		ContentValues cv = new ContentValues();
+		cv.put(QuestionTable.QUESTION_TITLE, questionTitle);
 		cv.put(QuestionTable.QUESTION, question);
 		cv.put(QuestionTable.QUESTION_DESCRIPTION, questionDescription);
 		cv.put(QuestionTable.QUESTION_TYPE, questionType);
@@ -94,10 +97,11 @@ public class SchemaHelper extends SQLiteOpenHelper {
 	}
 
 	// Wrapper method for adding a Report Template
-	public long addReportTemplate(int questionId,String name,String description) {
+	public long addReportTemplate(int questionId, String name,
+			String description) {
 		ContentValues cv = new ContentValues();
 		cv.put(ReportTemplateTable.NAME, name);
-		cv.put(ReportTemplateTable.DESCRIPTION,description);
+		cv.put(ReportTemplateTable.DESCRIPTION, description);
 		cv.put(ReportTemplateTable.QUESTION_ID, questionId);
 
 		SQLiteDatabase database = getWritableDatabase();
@@ -106,7 +110,8 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
-	public long addReportTable(String creationDate, String sentDate,
+	// Wrapper method for adding a Report
+	public long addReport(String creationDate, String sentDate,
 			String location, String comments, int clientId) {
 		ContentValues cv = new ContentValues();
 		cv.put(ReportTable.CREATION_DATE, creationDate);
@@ -120,4 +125,6 @@ public class SchemaHelper extends SQLiteOpenHelper {
 				ReportTable.CREATION_DATE, cv);
 		return result;
 	}
+
+
 }
