@@ -47,6 +47,8 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		// Create ReportTemplateTable
 		db.execSQL("CREATE TABLE " + ReportTemplateTable.TABLE_NAME + " ("
 				+ ReportTemplateTable.ID + pk + ","
+				+ ReportTemplateTable.NAME + textNotNull + ","
+				+ ReportTemplateTable.DESCRIPTION + textNotNull + ","
 				+ ReportTemplateTable.QUESTION_ID + integerNotNull + ");");
 	}
 
@@ -92,8 +94,10 @@ public class SchemaHelper extends SQLiteOpenHelper {
 	}
 
 	// Wrapper method for adding a Report Template
-	public long addReportTemplate(int questionId) {
+	public long addReportTemplate(int questionId,String name,String description) {
 		ContentValues cv = new ContentValues();
+		cv.put(ReportTemplateTable.NAME, name);
+		cv.put(ReportTemplateTable.DESCRIPTION,description);
 		cv.put(ReportTemplateTable.QUESTION_ID, questionId);
 
 		SQLiteDatabase database = getWritableDatabase();
