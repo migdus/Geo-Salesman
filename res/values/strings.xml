@@ -14,5 +14,9 @@
     <string name="send_reports_short_description">Use email to send reports</string>
     <string name="settings">Settings</string>
     <string name="settings_short_description">Settings</string>
-
+    <string name="title_activity_show_questions">ShowQuestions</string>
+    <!-- Questions menu -->
+    <string name="add_new_question">Add new question</string>
+<string name="no_questions_found">No questions found</string>
+<string name="tap_question_menu_to_add">Use the menu to add one</string>
 </resources>

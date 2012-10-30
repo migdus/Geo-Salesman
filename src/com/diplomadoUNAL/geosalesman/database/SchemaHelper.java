@@ -1,9 +1,14 @@
 package com.diplomadoUNAL.geosalesman.database;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
 public class SchemaHelper extends SQLiteOpenHelper {
@@ -11,7 +16,7 @@ public class SchemaHelper extends SQLiteOpenHelper {
 	// Toggle this number for updating tables and database
 	private static final int DATABASE_VERSION = 1;
 
-	SchemaHelper(Context context) {
+	public SchemaHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
@@ -126,5 +131,58 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
+	public ArrayList<HashMap<String, String>> getQuestionsTitlesAndDescriptions() {
+		String[] columns = new String[] { QuestionTable.ID,
+				QuestionTable.QUESTION_TITLE,
+				QuestionTable.QUESTION_DESCRIPTION };
+		String query = SQLiteQueryBuilder
+				.buildQueryString(false, QuestionTable.TABLE_NAME, columns,
+						null, null, null, null, null);
+		SQLiteDatabase database = getWritableDatabase();
+		Cursor cursor = database.rawQuery(query, null);
+		ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
+		while (cursor.moveToNext()) {
+			HashMap<String, String> hashMap = new HashMap<String, String>();
+			hashMap.put(QuestionTable.ID,
+					cursor.getString(cursor.getColumnIndex(QuestionTable.ID)));
+			hashMap.put(QuestionTable.QUESTION_TITLE, cursor.getString(cursor
+					.getColumnIndex(QuestionTable.QUESTION_TITLE)));
+			hashMap.put(
+					QuestionTable.QUESTION_DESCRIPTION,
+					cursor.getString(cursor
+							.getColumnIndex(QuestionTable.QUESTION_DESCRIPTION)));
+			result.add(hashMap);
+		}
+		return result;
+	}
+
+	public HashMap<String, String> getQuestion(int id) {
+		
+		String[] columns = new String[] { QuestionTable.QUESTION_TITLE,
+				QuestionTable.QUESTION_DESCRIPTION, QuestionTable.QUESTION,
+				QuestionTable.QUESTION_TYPE, QuestionTable.ANSWER_OPTIONS };
+		String query = SQLiteQueryBuilder.buildQueryString(false,
+				QuestionTable.TABLE_NAME, columns, QuestionTable.ID + "="
+						+ Integer.valueOf(id).toString(), null, null, null, null);
+		SQLiteDatabase database = getWritableDatabase();
+		Cursor cursor = database.rawQuery(query, null);
+		HashMap<String, String> result = new HashMap<String, String>();
+		while (cursor.moveToNext()) {
+
+			result.put(QuestionTable.QUESTION_TITLE, cursor.getString(cursor
+					.getColumnIndex(QuestionTable.QUESTION_TITLE)));
+			result.put(QuestionTable.QUESTION,
+					cursor.getString(cursor.getColumnIndex(QuestionTable.QUESTION)));
+			result.put(
+					QuestionTable.QUESTION_DESCRIPTION,
+					cursor.getString(cursor
+							.getColumnIndex(QuestionTable.QUESTION_DESCRIPTION)));
+			result.put(QuestionTable.QUESTION_TYPE,
+					cursor.getString(cursor.getColumnIndex(QuestionTable.QUESTION_TYPE)));
+			result.put(QuestionTable.ANSWER_OPTIONS,
+					cursor.getString(cursor.getColumnIndex(QuestionTable.ANSWER_OPTIONS)));
+		}
+		return result;
+	}
 
 }
