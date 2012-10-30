@@ -1,5 +1,7 @@
 <resources>
 
+    <string name="OK">OK</string>
+    <string name="cancel">Cancel</string>
     <string name="app_name">Geo Salesman</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
@@ -17,6 +19,29 @@
     <string name="title_activity_show_questions">ShowQuestions</string>
     <!-- Questions menu -->
     <string name="add_new_question">Add new question</string>
-<string name="no_questions_found">No questions found</string>
-<string name="tap_question_menu_to_add">Use the menu to add one</string>
+    <string name="no_questions_found">No questions found</string>
+    <string name="tap_question_menu_to_add">Use the menu to add one</string>
+    <string name="title_activity_add_new_question">AddNewQuestion</string>
+
+    <!-- Add new Question activity -->
+
+    <string name="spinner_question_type_prompt">Question type</string>
+
+    <string-array name="question_type_options">
+        <item>Question type</item>
+        <item>Yes/No</item>
+        <item>Multiple choice answer</item>
+        <item>Open</item>
+        <item>Scale</item>
+    </string-array>
+    
+    <string name="type_question_title">Type the question title</string>
+    <string name="type_question_description">Type question description</string>
+    <string name="type_your_question">Type the question</string>
+    <!-- Range Selection Dialog -->
+    <string name="range_selection_dialog_title">Select Range</string>
+    <string name="range_selection_dialog_message">Please select a minimum and a maximun number</string>
+    <string name="maximum_value">Maximum Value</string>
+    <string name="minimum_value">Minimum Value</string>
+
 </resources>
