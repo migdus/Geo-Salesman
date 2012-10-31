@@ -4,10 +4,11 @@
     <string name="cancel">Cancel</string>
     
     <!-- Validation error messages for EditText -->
-    <string name="editText_validation_error_empty_field">The field cannot be empty</string>
-    <string name="editText_validation_error_numbers_only">Only numbers are allowed on this field</string>
-    <string name="editText_validation_error_alpha_only">Only letters and spaces are allowed on this field</string>
-    <string name="editText_validation_error_pipe_char_not_allowed">Pipe character (&quot;|&quot;) not allowed</string>
+    <string name="editText_validation_error_empty_field">The field cannot be empty.</string>
+    <string name="editText_validation_error_numbers_only">Only numbers are allowed on this field.</string>
+    <string name="editText_validation_error_alpha_only">Only letters and spaces are allowed on this field.</string>
+    <string name="editText_validation_error_pipe_char_not_allowed">Pipe character (&quot;|&quot;) not allowed.</string>
+    <string name="editText_validation_error_char_not_allowed">The following characters are not allowed: (&quot;|&quot;).</string>
     
     <string name="app_name">Geo Salesman</string>
     <string name="hello_world">Hello world!</string>
