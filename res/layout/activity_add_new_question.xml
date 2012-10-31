@@ -40,4 +40,23 @@
         android:layout_marginBottom="15dp"
         android:prompt="@string/spinner_question_type_prompt" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/button_add_new_question_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/OK" />
+
+        <Button
+            android:id="@+id/button_add_new_question_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/button_add_new_question_ok"
+            android:text="@string/cancel" />
+
+    </RelativeLayout>
+
 </LinearLayout>

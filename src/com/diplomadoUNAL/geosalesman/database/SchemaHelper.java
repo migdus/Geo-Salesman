@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 
 public class SchemaHelper extends SQLiteOpenHelper {
-	private static final String DATABASE_NAME = "geosalesman_data.db";
+	private static final String DATABASE_NAME = "geosalesman_data.sqlite";
 	// Toggle this number for updating tables and database
 	private static final int DATABASE_VERSION = 1;
 
