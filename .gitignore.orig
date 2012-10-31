@@ -1,0 +1,27 @@
+<<<<<<< HEAD
+lt application files
+=======
+# built application files
+>>>>>>> 9ae671aa60b5340a7841f1a1ab516f77a48ca122
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Local configuration file (sdk path, etc)
+local.properties
+<<<<<<< HEAD
+
+# Eclipse project files
+.classpath
+.project
+=======
+>>>>>>> 9ae671aa60b5340a7841f1a1ab516f77a48ca122
