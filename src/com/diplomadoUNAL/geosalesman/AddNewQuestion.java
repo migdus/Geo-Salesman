@@ -26,7 +26,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 public class AddNewQuestion extends Activity {
-	private static final String PREFS_NAME = "AddNewQuestionSharedPrefs";
+	public static final String PREFS_NAME = "AddNewQuestionSharedPrefs";
 	private SharedPreferences sharedPreferences;
 	// SharedPreferences items for this activity
 	private static final String PREF_SELECTED_QUESTION_TYPE = "selectedQuestionType";
