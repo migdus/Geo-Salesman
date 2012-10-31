@@ -30,6 +30,7 @@ public class AddNewQuestion extends Activity {
 	// SharedPreferences items for this activity
 	private static final String PREF_SELECTED_QUESTION_TYPE = "selectedQuestionType";
 	// Range question type
+	private static final String QUESTION_TYPE_NONE_SELECTED = "questionTypeNoneSelected";
 	private static final String QUESTION_TYPE_RANGE = "questionTypeRange";
 	private static final String PREF_MINIMUM_RANGE_VALUE = "addNewQuestionSaveMinimumRangeValue";
 	private static final String PREF_MAXIMUM_RANGE_VALUE = "addNewQuestionSaveMaximumRangeValue";
@@ -123,23 +124,20 @@ public class AddNewQuestion extends Activity {
 				SchemaHelper schemaHelper = new SchemaHelper(
 								AddNewQuestion.this);
 
-				boolean flagQuestionTypeValidation = false;
 				String questionType = sharedPreferences.getString(
 								PREF_SELECTED_QUESTION_TYPE, "none");
+				
+				// This will store in a string data according to the selected answer option
 				String answerOptions = new String();
-				if (questionType.equals("none")
-								|| questionType.equals(getResources()
-												.getString(R.string.spinner_question_default_option)
-												.toString())) {
 
+				if (questionType.equals(QUESTION_TYPE_NONE_SELECTED)) {
 					Toast.makeText(AddNewQuestion.this,
 									getResources().getString(
 													R.string.spinner_question_error_no_option_chosen)
 													.toString(),
 									Toast.LENGTH_LONG).show();
-
-					flagQuestionTypeValidation = false;
-				} else if (questionType.equals(QUESTION_TYPE_RANGE)) {
+				}
+				else if (questionType.equals(QUESTION_TYPE_RANGE)) {
 					answerOptions = Integer.toString(sharedPreferences.getInt(
 									PREF_MINIMUM_RANGE_VALUE, -1))
 									+ "-"
@@ -210,7 +208,15 @@ public class AddNewQuestion extends Activity {
 					long selectedItem = parent.getItemIdAtPosition(pos);
 
 					if (selectedItem == 0) {
-						// Do nothing
+						// Do nothing, but record that the Question Type is not selected yet
+						Editor sharedPreferencesEditor = sharedPreferences
+										.edit();
+						sharedPreferencesEditor.putString(
+										PREF_SELECTED_QUESTION_TYPE,
+										QUESTION_TYPE_NONE_SELECTED);
+						sharedPreferencesEditor.commit();
+						flagQuestionTypeValidation = false;
+
 					} else if (selectedItem == 1) {
 						// Yes/No Question
 						Toast.makeText(AddNewQuestion.this,
