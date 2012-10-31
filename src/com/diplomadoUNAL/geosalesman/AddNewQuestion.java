@@ -1,10 +1,5 @@
 package com.diplomadoUNAL.geosalesman;
 
-import java.util.HashMap;
-
-import com.diplomadoUNAL.geosalesman.database.SchemaHelper;
-import com.diplomadoUNAL.geosalesman.util.EditTextValidation;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,12 +13,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.diplomadoUNAL.geosalesman.database.SchemaHelper;
+import com.diplomadoUNAL.geosalesman.util.EditTextValidation;
 
 public class AddNewQuestion extends Activity {
 	public static final String PREFS_NAME = "AddNewQuestionSharedPrefs";
@@ -34,6 +33,15 @@ public class AddNewQuestion extends Activity {
 	private static final String QUESTION_TYPE_RANGE = "questionTypeRange";
 	private static final String PREF_MINIMUM_RANGE_VALUE = "addNewQuestionSaveMinimumRangeValue";
 	private static final String PREF_MAXIMUM_RANGE_VALUE = "addNewQuestionSaveMaximumRangeValue";
+	// validation flags
+	private Boolean flagEditTextQuestionTitleValidation = Boolean
+					.valueOf(false);
+	private Boolean flagEditTextQuestionDescriptionValidation = Boolean
+					.valueOf(false);
+	private Boolean flagEditTextQuestionValidation = Boolean.valueOf(false);
+	private Boolean flagEditTextMinimumValidation = Boolean.valueOf(false);
+	private Boolean flagEditTextMaximumValidation = Boolean.valueOf(false);
+	private Boolean flagQuestionTypeValidation = Boolean.valueOf(false);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +56,64 @@ public class AddNewQuestion extends Activity {
 		sharedPreferencesEditor.commit();
 
 		Spinner spinnerQuestion = (Spinner) findViewById(R.id.spinner_question_type);
+
 		new SpinnerControl().execute(spinnerQuestion);
+
+		final SparseArray<String> validationTestAlphaWithSpace = new SparseArray<String>();
+		validationTestAlphaWithSpace
+						.put(EditTextValidation.ALPHABETHIC_VALIDATION,
+										getResources().getString(
+														R.string.editText_validation_error_alpha_only));
+		// EditText Validation
+		final EditText editTextQuestionTitle = (EditText) AddNewQuestion.this
+						.findViewById(R.id.editText_question_title);
+
+		editTextQuestionTitle
+						.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+							@Override
+							public void onFocusChange(View v, boolean hasFocus) {
+								if (!hasFocus) {
+									flagEditTextQuestionTitleValidation = EditTextValidation
+													.editTextValidation(
+																	(EditText) v,
+																	validationTestAlphaWithSpace);
+								}
+
+							}
+						});
+
+		final EditText editTextQuestionDescription = (EditText) AddNewQuestion.this
+						.findViewById(R.id.editText_question_description);
+		editTextQuestionDescription
+						.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+							@Override
+							public void onFocusChange(View v, boolean hasFocus) {
+								if (!hasFocus) {
+									flagEditTextQuestionDescriptionValidation = EditTextValidation
+													.editTextValidation(
+																	(EditText) v,
+																	validationTestAlphaWithSpace);
+								}
+
+							}
+						});
+
+		final EditText editTextQuestion = (EditText) AddNewQuestion.this
+						.findViewById(R.id.editText_question);
+		editTextQuestion.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					flagEditTextQuestionValidation = EditTextValidation
+									.editTextValidation((EditText) v,
+													validationTestAlphaWithSpace);
+				}
+
+			}
+		});
 
 		Button buttonOk = (Button) this
 						.findViewById(R.id.button_add_new_question_ok);
@@ -57,31 +122,6 @@ public class AddNewQuestion extends Activity {
 			public void onClick(View v) {
 				SchemaHelper schemaHelper = new SchemaHelper(
 								AddNewQuestion.this);
-
-				SparseArray<String> validationTestAlphaWithSpace = new SparseArray<String>();
-				validationTestAlphaWithSpace
-								.put(EditTextValidation.ALPHABETHIC_VALIDATION,
-												getResources().getString(
-																R.string.editText_validation_error_alpha_only));
-
-				EditText editTextQuestionTitle = (EditText) AddNewQuestion.this
-								.findViewById(R.id.editText_question_title);
-				boolean flagEditTextQuestionTitleValidation = EditTextValidation
-								.editTextValidation(editTextQuestionTitle,
-												validationTestAlphaWithSpace);
-
-				EditText editTextQuestionDescription = (EditText) AddNewQuestion.this
-								.findViewById(R.id.editText_question_description);
-				boolean flagEditTextQuestionDescriptionValidation = EditTextValidation
-								.editTextValidation(
-												editTextQuestionDescription,
-												validationTestAlphaWithSpace);
-
-				EditText editTextQuestion = (EditText) AddNewQuestion.this
-								.findViewById(R.id.editText_question);
-				boolean flagEditTextQuestionValidation = EditTextValidation
-								.editTextValidation(editTextQuestion,
-												validationTestAlphaWithSpace);
 
 				boolean flagQuestionTypeValidation = false;
 				String questionType = sharedPreferences.getString(
@@ -100,9 +140,12 @@ public class AddNewQuestion extends Activity {
 
 					flagQuestionTypeValidation = false;
 				} else if (questionType.equals(QUESTION_TYPE_RANGE)) {
-					answerOptions = Integer.toString(sharedPreferences.getInt(PREF_MINIMUM_RANGE_VALUE, -1))
+					answerOptions = Integer.toString(sharedPreferences.getInt(
+									PREF_MINIMUM_RANGE_VALUE, -1))
 									+ "-"
-									+ Integer.toString(sharedPreferences.getInt(PREF_MINIMUM_RANGE_VALUE, -1));
+									+ Integer.toString(sharedPreferences
+													.getInt(PREF_MINIMUM_RANGE_VALUE,
+																	-1));
 					flagQuestionTypeValidation = true;
 				} else {
 					// TODO Implement other question type
@@ -114,9 +157,12 @@ public class AddNewQuestion extends Activity {
 				if (flagEditTextQuestionTitleValidation
 								&& flagEditTextQuestionDescriptionValidation
 								&& flagEditTextQuestionValidation
-								&& flagQuestionTypeValidation) {
+								&& flagQuestionTypeValidation
+								&& flagEditTextMinimumValidation
+								&& flagEditTextMaximumValidation) {
 					// Get data from fields
-					String questionTitle = (editTextQuestionTitle).getText().toString();
+					String questionTitle = (editTextQuestionTitle).getText()
+									.toString();
 					String question = (editTextQuestion).getText().toString();
 					String questionDescription = (editTextQuestionDescription)
 									.getText().toString();
@@ -195,11 +241,44 @@ public class AddNewQuestion extends Activity {
 										.inflate(R.layout.range_selection_dialog,
 														null);
 						rangeDialogBuilder.setView(rangeSelectionDialogLayout);
+
+						// EditText definition and validation
+						final SparseArray<String> validationTestAlphaWithSpace = new SparseArray<String>();
+						validationTestAlphaWithSpace
+										.put(EditTextValidation.NUMBER_VALIDATION,
+														getResources().getString(
+																		R.string.editText_validation_error_numbers_only));
+
 						final EditText minimumValue = (EditText) rangeSelectionDialogLayout
 										.findViewById(R.id.editText_minimum_value);
+						minimumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+							@Override
+							public void onFocusChange(View v, boolean hasFocus) {
+								if (!hasFocus) {
+									flagEditTextMinimumValidation = EditTextValidation
+													.editTextValidation(
+																	(EditText) v,
+																	validationTestAlphaWithSpace);
+								}
+
+							}
+						});
 						final EditText maximumValue = (EditText) rangeSelectionDialogLayout
 										.findViewById(R.id.editText_maximum_value);
+						maximumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
 
+							@Override
+							public void onFocusChange(View v, boolean hasFocus) {
+								if (!hasFocus) {
+									flagEditTextMaximumValidation = EditTextValidation
+													.editTextValidation(
+																	(EditText) v,
+																	validationTestAlphaWithSpace);
+								}
+
+							}
+						});
 						rangeDialogBuilder.setPositiveButton(getResources()
 										.getString(R.string.OK),
 										new DialogInterface.OnClickListener() {
