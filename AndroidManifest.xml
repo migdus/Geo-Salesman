@@ -6,6 +6,7 @@
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="15" />
+    <instrumentation android:label="Instrumentation Test" android:targetPackage="com.diplomadoUNAL.geosalesman.test" android:name="android.test.InstrumentationTestRunner"></instrumentation>
 
     <application
         android:icon="@drawable/ic_launcher"
