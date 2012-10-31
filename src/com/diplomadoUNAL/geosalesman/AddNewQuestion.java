@@ -58,13 +58,161 @@ public class AddNewQuestion extends Activity {
 
 		Spinner spinnerQuestion = (Spinner) findViewById(R.id.spinner_question_type);
 
-		new SpinnerControl().execute(spinnerQuestion);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter
+						.createFromResource(
+										AddNewQuestion.this,
+										R.array.question_type_options,
+										android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerQuestion.setAdapter(adapter);
+		spinnerQuestion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+							int pos, long id) {
+				long selectedItem = parent.getItemIdAtPosition(pos);
+
+				if (selectedItem == 0) {
+					// Do nothing, but record that the Question Type is not selected yet
+					Editor sharedPreferencesEditor = sharedPreferences
+									.edit();
+					sharedPreferencesEditor.putString(
+									PREF_SELECTED_QUESTION_TYPE,
+									QUESTION_TYPE_NONE_SELECTED);
+					sharedPreferencesEditor.commit();
+					flagQuestionTypeValidation = false;
+
+				} else if (selectedItem == 1) {
+					// Yes/No Question
+					Toast.makeText(AddNewQuestion.this,
+									"Not implemented yet",
+									Toast.LENGTH_LONG).show();
+				} else if (selectedItem == 2) {
+					// Multiple choice answer
+					Toast.makeText(AddNewQuestion.this,
+									"Not implemented yet",
+									Toast.LENGTH_LONG).show();
+				} else if (selectedItem == 3) {
+					// Open question
+					Toast.makeText(AddNewQuestion.this,
+									"Not implemented yet",
+									Toast.LENGTH_LONG).show();
+				} else if (selectedItem == 4) {
+					// Range Question
+					// The range dialog
+					AlertDialog.Builder rangeDialogBuilder = new AlertDialog.Builder(
+									AddNewQuestion.this);
+					rangeDialogBuilder.setTitle(getResources().getString(
+									R.string.range_selection_dialog_title));
+					rangeDialogBuilder
+									.setMessage(getResources()
+													.getString(R.string.range_selection_dialog_message));
+					LayoutInflater alertDialogLayoutInflater = getLayoutInflater();
+					View rangeSelectionDialogLayout = alertDialogLayoutInflater
+									.inflate(R.layout.range_selection_dialog,
+													null);
+					rangeDialogBuilder.setView(rangeSelectionDialogLayout);
+
+					// EditText definition and validation
+					final SparseArray<String> validationTestAlphaWithSpace = new SparseArray<String>();
+					validationTestAlphaWithSpace
+									.put(EditTextValidation.NUMBER_VALIDATION,
+													getResources().getString(
+																	R.string.editText_validation_error_numbers_only));
+
+					final EditText minimumValue = (EditText) rangeSelectionDialogLayout
+									.findViewById(R.id.editText_minimum_value);
+					minimumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+						@Override
+						public void onFocusChange(View v, boolean hasFocus) {
+							if (!hasFocus) {
+								flagEditTextMinimumValidation = EditTextValidation
+												.editTextValidation(
+																(EditText) v,
+																validationTestAlphaWithSpace);
+							}
+
+						}
+					});
+					final EditText maximumValue = (EditText) rangeSelectionDialogLayout
+									.findViewById(R.id.editText_maximum_value);
+					maximumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+						@Override
+						public void onFocusChange(View v, boolean hasFocus) {
+							if (!hasFocus) {
+								flagEditTextMaximumValidation = EditTextValidation
+												.editTextValidation(
+																(EditText) v,
+																validationTestAlphaWithSpace);
+							}
+
+						}
+					});
+					rangeDialogBuilder.setPositiveButton(getResources()
+									.getString(R.string.OK),
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(
+														DialogInterface dialog,
+														int which) {
+											Editor sharedPreferencesEditor = sharedPreferences
+															.edit();
+											sharedPreferencesEditor
+															.putInt(PREF_MINIMUM_RANGE_VALUE,
+																			Integer.parseInt(minimumValue
+																							.getText()
+																							.toString()));
+											sharedPreferencesEditor
+															.putInt(PREF_MAXIMUM_RANGE_VALUE,
+																			Integer.parseInt(maximumValue
+																							.getText()
+																							.toString()));
+
+											sharedPreferencesEditor
+															.putString(PREF_SELECTED_QUESTION_TYPE,
+																			QUESTION_TYPE_RANGE);
+											sharedPreferencesEditor
+															.commit();
+										}
+									});
+					rangeDialogBuilder.setNegativeButton(R.string.cancel,
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+														DialogInterface dialog,
+														int which) {
+											if (which == Dialog.BUTTON_NEGATIVE) {
+												dialog.dismiss();
+											}
+
+										}
+									});
+					rangeDialogBuilder.create();
+					rangeDialogBuilder.show();
+				}
+
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		
 		final SparseArray<String> validationTestAlphaWithSpace = new SparseArray<String>();
 		validationTestAlphaWithSpace
 						.put(EditTextValidation.ALPHABETHIC_VALIDATION,
 										getResources().getString(
 														R.string.editText_validation_error_alpha_only));
+		validationTestAlphaWithSpace
+						.put(EditTextValidation.CHARACTER_VALIDATION,
+										getResources().getString(
+														R.string.editText_validation_error_char_not_allowed));
 		// EditText Validation
 		final EditText editTextQuestionTitle = (EditText) AddNewQuestion.this
 						.findViewById(R.id.editText_question_title);
@@ -126,7 +274,7 @@ public class AddNewQuestion extends Activity {
 
 				String questionType = sharedPreferences.getString(
 								PREF_SELECTED_QUESTION_TYPE, "none");
-				
+
 				// This will store in a string data according to the selected answer option
 				String answerOptions = new String();
 
@@ -136,8 +284,7 @@ public class AddNewQuestion extends Activity {
 													R.string.spinner_question_error_no_option_chosen)
 													.toString(),
 									Toast.LENGTH_LONG).show();
-				}
-				else if (questionType.equals(QUESTION_TYPE_RANGE)) {
+				} else if (questionType.equals(QUESTION_TYPE_RANGE)) {
 					answerOptions = Integer.toString(sharedPreferences.getInt(
 									PREF_MINIMUM_RANGE_VALUE, -1))
 									+ "-"
@@ -188,157 +335,5 @@ public class AddNewQuestion extends Activity {
 		return true;
 	}
 
-	private class SpinnerControl extends AsyncTask<Spinner, Integer, Long> {
 
-		@Override
-		protected Long doInBackground(Spinner... params) {
-			Spinner spinnerQuestion = params[0];
-			ArrayAdapter<CharSequence> adapter = ArrayAdapter
-							.createFromResource(
-											AddNewQuestion.this,
-											R.array.question_type_options,
-											android.R.layout.simple_spinner_item);
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			spinnerQuestion.setAdapter(adapter);
-			spinnerQuestion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-				@Override
-				public void onItemSelected(AdapterView<?> parent, View view,
-								int pos, long id) {
-					long selectedItem = parent.getItemIdAtPosition(pos);
-
-					if (selectedItem == 0) {
-						// Do nothing, but record that the Question Type is not selected yet
-						Editor sharedPreferencesEditor = sharedPreferences
-										.edit();
-						sharedPreferencesEditor.putString(
-										PREF_SELECTED_QUESTION_TYPE,
-										QUESTION_TYPE_NONE_SELECTED);
-						sharedPreferencesEditor.commit();
-						flagQuestionTypeValidation = false;
-
-					} else if (selectedItem == 1) {
-						// Yes/No Question
-						Toast.makeText(AddNewQuestion.this,
-										"Not implemented yet",
-										Toast.LENGTH_LONG).show();
-					} else if (selectedItem == 2) {
-						// Multiple choice answer
-						Toast.makeText(AddNewQuestion.this,
-										"Not implemented yet",
-										Toast.LENGTH_LONG).show();
-					} else if (selectedItem == 3) {
-						// Open question
-						Toast.makeText(AddNewQuestion.this,
-										"Not implemented yet",
-										Toast.LENGTH_LONG).show();
-					} else if (selectedItem == 4) {
-						// Range Question
-						// The range dialog
-						AlertDialog.Builder rangeDialogBuilder = new AlertDialog.Builder(
-										AddNewQuestion.this);
-						rangeDialogBuilder.setTitle(getResources().getString(
-										R.string.range_selection_dialog_title));
-						rangeDialogBuilder
-										.setMessage(getResources()
-														.getString(R.string.range_selection_dialog_message));
-						LayoutInflater alertDialogLayoutInflater = getLayoutInflater();
-						View rangeSelectionDialogLayout = alertDialogLayoutInflater
-										.inflate(R.layout.range_selection_dialog,
-														null);
-						rangeDialogBuilder.setView(rangeSelectionDialogLayout);
-
-						// EditText definition and validation
-						final SparseArray<String> validationTestAlphaWithSpace = new SparseArray<String>();
-						validationTestAlphaWithSpace
-										.put(EditTextValidation.NUMBER_VALIDATION,
-														getResources().getString(
-																		R.string.editText_validation_error_numbers_only));
-
-						final EditText minimumValue = (EditText) rangeSelectionDialogLayout
-										.findViewById(R.id.editText_minimum_value);
-						minimumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
-
-							@Override
-							public void onFocusChange(View v, boolean hasFocus) {
-								if (!hasFocus) {
-									flagEditTextMinimumValidation = EditTextValidation
-													.editTextValidation(
-																	(EditText) v,
-																	validationTestAlphaWithSpace);
-								}
-
-							}
-						});
-						final EditText maximumValue = (EditText) rangeSelectionDialogLayout
-										.findViewById(R.id.editText_maximum_value);
-						maximumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
-
-							@Override
-							public void onFocusChange(View v, boolean hasFocus) {
-								if (!hasFocus) {
-									flagEditTextMaximumValidation = EditTextValidation
-													.editTextValidation(
-																	(EditText) v,
-																	validationTestAlphaWithSpace);
-								}
-
-							}
-						});
-						rangeDialogBuilder.setPositiveButton(getResources()
-										.getString(R.string.OK),
-										new DialogInterface.OnClickListener() {
-											@Override
-											public void onClick(
-															DialogInterface dialog,
-															int which) {
-												Editor sharedPreferencesEditor = sharedPreferences
-																.edit();
-												sharedPreferencesEditor
-																.putInt(PREF_MINIMUM_RANGE_VALUE,
-																				Integer.parseInt(minimumValue
-																								.getText()
-																								.toString()));
-												sharedPreferencesEditor
-																.putInt(PREF_MAXIMUM_RANGE_VALUE,
-																				Integer.parseInt(maximumValue
-																								.getText()
-																								.toString()));
-
-												sharedPreferencesEditor
-																.putString(PREF_SELECTED_QUESTION_TYPE,
-																				QUESTION_TYPE_RANGE);
-												sharedPreferencesEditor
-																.commit();
-											}
-										});
-						rangeDialogBuilder.setNegativeButton(R.string.cancel,
-										new DialogInterface.OnClickListener() {
-
-											@Override
-											public void onClick(
-															DialogInterface dialog,
-															int which) {
-												if (which == Dialog.BUTTON_NEGATIVE) {
-													dialog.dismiss();
-												}
-
-											}
-										});
-						rangeDialogBuilder.create();
-						rangeDialogBuilder.show();
-					}
-
-				}
-
-				@Override
-				public void onNothingSelected(AdapterView<?> arg0) {
-					// TODO Auto-generated method stub
-
-				}
-			});
-			return null;
-		}
-
-	}
 }
