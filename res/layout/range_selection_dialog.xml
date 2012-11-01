@@ -5,22 +5,22 @@
     android:orientation="vertical" >
 
     <EditText
-        android:id="@+id/editText_minimum_value"
+        android:id="@+id/activity_add_new_question_editText_minimum_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/minimum_value"
+        android:hint="@string/activity_add_new_question_minimum_value_hint"
         android:inputType="number" >
 
         <requestFocus />
     </EditText>
 
     <EditText
-        android:id="@+id/editText_maximum_value"
+        android:id="@+id/activity_add_new_question_editText_maximum_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/maximum_value"
+        android:hint="@string/activity_add_new_question_maximum_value_hint"
         android:inputType="number" />
 
 </LinearLayout>

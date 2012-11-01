@@ -54,7 +54,7 @@ public class AddNewQuestion extends Activity {
 		sharedPreferencesEditor.clear();
 		sharedPreferencesEditor.commit();
 
-		Spinner spinnerQuestion = (Spinner) findViewById(R.id.spinner_question_type);
+		Spinner spinnerQuestion = (Spinner) findViewById(R.id.activity_add_new_question_spinner_question_type);
 
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter
 						.createFromResource(
@@ -101,10 +101,10 @@ public class AddNewQuestion extends Activity {
 					AlertDialog.Builder rangeDialogBuilder = new AlertDialog.Builder(
 									AddNewQuestion.this);
 					rangeDialogBuilder.setTitle(getResources().getString(
-									R.string.range_selection_dialog_title));
+									R.string.activity_add_new_question_range_selection_dialog_title));
 					rangeDialogBuilder
 									.setMessage(getResources()
-													.getString(R.string.range_selection_dialog_message));
+													.getString(R.string.activity_add_new_question_range_selection_dialog_message));
 					LayoutInflater alertDialogLayoutInflater = getLayoutInflater();
 					View rangeSelectionDialogLayout = alertDialogLayoutInflater
 									.inflate(R.layout.range_selection_dialog,
@@ -119,7 +119,7 @@ public class AddNewQuestion extends Activity {
 																	R.string.editText_validation_error_numbers_only));
 
 					final EditText minimumValue = (EditText) rangeSelectionDialogLayout
-									.findViewById(R.id.editText_minimum_value);
+									.findViewById(R.id.activity_add_new_question_editText_minimum_value);
 					minimumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
 
 						@Override
@@ -134,7 +134,7 @@ public class AddNewQuestion extends Activity {
 						}
 					});
 					final EditText maximumValue = (EditText) rangeSelectionDialogLayout
-									.findViewById(R.id.editText_maximum_value);
+									.findViewById(R.id.activity_add_new_question_editText_maximum_value);
 					maximumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
 
 						@Override
@@ -213,7 +213,7 @@ public class AddNewQuestion extends Activity {
 														R.string.editText_validation_error_char_not_allowed));
 		// EditText Validation
 		final EditText editTextQuestionTitle = (EditText) AddNewQuestion.this
-						.findViewById(R.id.editText_question_title);
+						.findViewById(R.id.activity_add_new_question_editText_question_title);
 
 		editTextQuestionTitle
 						.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -231,7 +231,7 @@ public class AddNewQuestion extends Activity {
 						});
 
 		final EditText editTextQuestionDescription = (EditText) AddNewQuestion.this
-						.findViewById(R.id.editText_question_description);
+						.findViewById(R.id.activity_add_new_question_editText_question_description);
 		editTextQuestionDescription
 						.setOnFocusChangeListener(new OnFocusChangeListener() {
 
@@ -248,7 +248,7 @@ public class AddNewQuestion extends Activity {
 						});
 
 		final EditText editTextQuestion = (EditText) AddNewQuestion.this
-						.findViewById(R.id.editText_question);
+						.findViewById(R.id.activity_add_new_question_editText_question);
 		editTextQuestion.setOnFocusChangeListener(new OnFocusChangeListener() {
 
 			@Override
@@ -263,7 +263,7 @@ public class AddNewQuestion extends Activity {
 		});
 
 		Button buttonOk = (Button) this
-						.findViewById(R.id.button_add_new_question_ok);
+						.findViewById(R.id.activity_add_new_question_button_add_new_question_ok);
 		buttonOk.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

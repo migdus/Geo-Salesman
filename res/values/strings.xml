@@ -37,7 +37,7 @@
 
     <!-- Add new Question activity -->
 
-    <string name="spinner_question_type_prompt">Question type</string>
+    <string name="activity_add_new_question_spinner_question_type_prompt">Question type</string>
 
     <string name="spinner_question_default_option">Question type</string>
     
@@ -50,13 +50,13 @@
         <item>Scale</item>
     </string-array>
     <string name="spinner_question_error_no_option_chosen">Please choose a question type</string>
-    <string name="type_question_title">Type the question title</string>
-    <string name="type_question_description">Type question description</string>
-    <string name="type_your_question">Type the question</string>
+    <string name="activity_add_new_question_type_question_title_hint">Type the question title</string>
+    <string name="activity_add_new_question_type_question_description_hint">Type question description</string>
+    <string name="activity_add_new_question_type_your_question_hint">Type the question</string>
     <!-- Range Selection Dialog -->
-    <string name="range_selection_dialog_title">Select Range</string>
-    <string name="range_selection_dialog_message">Please select a minimum and a maximun number</string>
-    <string name="maximum_value">Maximum Value</string>
-    <string name="minimum_value">Minimum Value</string>
+    <string name="activity_add_new_question_range_selection_dialog_title">Select Range</string>
+    <string name="activity_add_new_question_range_selection_dialog_message">Please select a minimum and a maximun number</string>
+    <string name="activity_add_new_question_maximum_value_hint">Maximum Value</string>
+    <string name="activity_add_new_question_minimum_value_hint">Minimum Value</string>
 
 </resources>
