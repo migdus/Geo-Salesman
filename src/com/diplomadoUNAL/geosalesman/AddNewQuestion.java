@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -53,7 +52,6 @@ public class AddNewQuestion extends Activity {
 		sharedPreferences = getSharedPreferences(PREFS_NAME, 0);
 		Editor sharedPreferencesEditor = sharedPreferences.edit();
 		sharedPreferencesEditor.clear();
-		sharedPreferencesEditor.putString("TEST", "MIGUEL");
 		sharedPreferencesEditor.commit();
 
 		Spinner spinnerQuestion = (Spinner) findViewById(R.id.spinner_question_type);
@@ -317,10 +315,13 @@ public class AddNewQuestion extends Activity {
 									questionType, answerOptions);
 					if (dbResult < 0) {
 						Toast.makeText(AddNewQuestion.this,
-										"Error storing at database",
+										getResources().getString(R.string.database_error_storing_data),
 										Toast.LENGTH_LONG).show();
+						//TODO What to do next?
 					} else {
-
+						Toast.makeText(AddNewQuestion.this, getResources().getString(R.string.database_success_storing_data),
+										Toast.LENGTH_LONG).show();
+						//TODO Go to another activity because everything went OK
 					}
 				}
 
@@ -334,6 +335,5 @@ public class AddNewQuestion extends Activity {
 		getMenuInflater().inflate(R.menu.activity_add_new_question, menu);
 		return true;
 	}
-
 
 }

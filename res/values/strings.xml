@@ -10,6 +10,10 @@
     <string name="editText_validation_error_pipe_char_not_allowed">Pipe character (&quot;|&quot;) not allowed.</string>
     <string name="editText_validation_error_char_not_allowed">The following characters are not allowed: (&quot;|&quot;).</string>
     
+    <!-- Database related messages -->
+    <string name="database_error_storing_data">Error storing data in the database.</string>
+    <string name="database_success_storing_data">Data stored successfully.</string>
+    
     <string name="app_name">Geo Salesman</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
