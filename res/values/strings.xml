@@ -9,6 +9,7 @@
     <string name="editText_validation_error_alpha_only">Only letters and spaces are allowed on this field.</string>
     <string name="editText_validation_error_pipe_char_not_allowed">Pipe character (&quot;|&quot;) not allowed.</string>
     <string name="editText_validation_error_char_not_allowed">The following characters are not allowed: (&quot;|&quot;).</string>
+    <string name="editText_validation_error_in_one_or_more">At least one field has validation errors. Cannot continue.</string>
     
     <!-- Database related messages -->
     <string name="database_error_storing_data">Error storing data in the database.</string>
@@ -57,8 +58,8 @@
     <string name="activity_add_new_question_type_question_description_hint">Type question description</string>
     <string name="activity_add_new_question_type_your_question_hint">Type the question</string>
     <!-- Range Selection Dialog -->
-    <string name="activity_add_new_question_range_selection_dialog_title">Select Range</string>
-    <string name="activity_add_new_question_range_selection_dialog_message">Please select a minimum and a maximun number</string>
+    <string name="activity_add_new_question_scale_selection_dialog_title">Select Range</string>
+    <string name="activity_add_new_question_scale_selection_dialog_message">Please select a minimum and a maximun number</string>
     <string name="activity_add_new_question_maximum_value_hint">Maximum Value</string>
     <string name="activity_add_new_question_minimum_value_hint">Minimum Value</string>
 
