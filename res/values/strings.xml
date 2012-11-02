@@ -38,16 +38,19 @@
     <!-- Add new Question activity -->
 
     <string name="activity_add_new_question_spinner_question_type_prompt">Question type</string>
-
-    <string name="spinner_question_default_option">Question type</string>
+    
+    <string name="activity_add_new_question_spinner_option_default_option">Question type</string>
+    <string name="activity_add_new_question_spinner_option_yes_no">Yes/No</string>
+    <string name="activity_add_new_question_spinner_multiple_choice_answer">Multiple choice answer</string>
+    <string name="activity_add_new_question_spinner_option_open">Open</string>
+    <string name="activity_add_new_question_spinner_option_scale">Scale</string>
     
     <string-array name="question_type_options">
-        <!-- This one must be equal to spinner_question_default_option -->
-        <item>Question type</item>
-        <item>Yes/No</item>
-        <item>Multiple choice answer</item>
-        <item>Open</item>
-        <item>Scale</item>
+        <item>@string/activity_add_new_question_spinner_option_default_option</item>
+        <item>@string/activity_add_new_question_spinner_option_yes_no</item>
+        <item>@string/activity_add_new_question_spinner_multiple_choice_answer</item>
+        <item>@string/activity_add_new_question_spinner_option_open</item>
+        <item>@string/activity_add_new_question_spinner_option_scale</item>
     </string-array>
     <string name="spinner_question_error_no_option_chosen">Please choose a question type</string>
     <string name="activity_add_new_question_type_question_title_hint">Type the question title</string>
