@@ -1,17 +1,17 @@
 package com.diplomadoUNAL.geosalesman;
 
+import java.util.HashMap;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.util.SparseArray;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
-import android.view.View.OnHoverListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,15 +33,22 @@ public class AddNewQuestion extends Activity {
 	private static final String PREF_MINIMUM_RANGE_VALUE = "addNewQuestionSaveMinimumRangeValue";
 	private static final String PREF_MAXIMUM_RANGE_VALUE = "addNewQuestionSaveMaximumRangeValue";
 	// validation flags
-	private Boolean flagEditTextQuestionTitleValidation = Boolean
-					.valueOf(false);
-	private Boolean flagEditTextQuestionDescriptionValidation = Boolean
-					.valueOf(false);
-	private Boolean flagEditTextQuestionValidation = Boolean.valueOf(false);
-	private Boolean flagEditTextMinimumValidation = Boolean.valueOf(false);
-	private Boolean flagEditTextMaximumValidation = Boolean.valueOf(false);
-	private Boolean flagQuestionTypeValidation = Boolean.valueOf(false);
+	private boolean flagEditTextQuestionTitleValidation = false;
+	private boolean flagEditTextQuestionDescriptionValidation = false;
+	private boolean flagEditTextQuestionValidation = false;
+	private boolean flagEditTextMinimumValidation = false;
+	private boolean flagEditTextMaximumValidation = false;
+	private boolean flagQuestionTypeValidation = false;
 
+	private EditText editTextMinimumValue;
+	private EditText editTextMaximumValue;
+	private EditText editTextQuestionTitle;
+	private EditText editTextQuestionDescription;
+	private EditText editTextQuestion;
+
+	private HashMap<Integer, String> validationTestNumbers = null;
+	private HashMap<Integer, String> validationTestAlphaWithSpace=null;
+	
 	private void resetValidationFlags() {
 		flagEditTextQuestionValidation = Boolean.valueOf(false);
 		flagEditTextMinimumValidation = Boolean.valueOf(false);
@@ -49,6 +56,7 @@ public class AddNewQuestion extends Activity {
 		flagQuestionTypeValidation = Boolean.valueOf(false);
 	}
 
+	@SuppressLint("UseSparseArrays")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -123,7 +131,7 @@ public class AddNewQuestion extends Activity {
 				} else if (selectedItem
 								.equals(AddNewQuestion.this
 												.getResources()
-												.getString(R.string.activity_add_new_question_spinner_option_scale))) { 
+												.getString(R.string.activity_add_new_question_spinner_option_scale))) {
 					rangeDiag();
 				}
 
@@ -134,8 +142,10 @@ public class AddNewQuestion extends Activity {
 				// TODO Auto-generated method stub
 
 			}
+
 			
-			private void rangeDiag(){
+
+			private void rangeDiag() {
 				// Scale Question
 				// The scale dialog
 				final Dialog rangeDialog = new Dialog(AddNewQuestion.this);
@@ -151,39 +161,42 @@ public class AddNewQuestion extends Activity {
 								.findViewById(R.id.activity_add_new_question_range_selection_button_cancel);
 
 				// EditText definition and validation
-				final SparseArray<String> validationTestAlphaWithSpace = new SparseArray<String>();
-				validationTestAlphaWithSpace
+				validationTestNumbers = new HashMap<Integer, String>();
+				validationTestNumbers
 								.put(EditTextValidation.NUMBER_VALIDATION,
 												getResources().getString(
 																R.string.editText_validation_error_numbers_only));
+				validationTestNumbers
+								.put(EditTextValidation.CHARACTER_VALIDATION,
+												getResources().getString(
+																R.string.editText_validation_error_char_not_allowed));
+				validationTestNumbers
+								.put(EditTextValidation.NO_PIPE_CHAR_VALIDATION,
+												getResources().getString(
+																R.string.editText_validation_error_pipe_char_not_allowed));
+
 				// Edit text objects
-				final EditText minimumValue = (EditText) rangeDialog
+				editTextMinimumValue = (EditText) rangeDialog
 								.findViewById(R.id.activity_add_new_question_editText_minimum_value);
 
-				minimumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
-
+				editTextMinimumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
 					@Override
 					public void onFocusChange(View v, boolean hasFocus) {
 						if (!hasFocus) {
-							flagEditTextMaximumValidation = EditTextValidation
-											.editTextValidation(
-															(EditText) v,
-															validationTestAlphaWithSpace);
+							validateEditText((EditText) v,
+											validationTestNumbers);
 						}
 					}
 				});
 
-				final EditText maximumValue = (EditText) rangeDialog
+				editTextMaximumValue = (EditText) rangeDialog
 								.findViewById(R.id.activity_add_new_question_editText_maximum_value);
-				maximumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
-
+				editTextMaximumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
 					@Override
 					public void onFocusChange(View v, boolean hasFocus) {
 						if (!hasFocus) {
-							flagEditTextMaximumValidation = EditTextValidation
-											.editTextValidation(
-															(EditText) v,
-															validationTestAlphaWithSpace);
+							validateEditText((EditText) v,
+											validationTestNumbers);
 						}
 					}
 				});
@@ -191,12 +204,8 @@ public class AddNewQuestion extends Activity {
 				okButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						flagEditTextMaximumValidation = EditTextValidation
-										.editTextValidation(maximumValue,
-														validationTestAlphaWithSpace);
-						flagEditTextMinimumValidation = EditTextValidation
-										.editTextValidation(minimumValue,
-														validationTestAlphaWithSpace);
+						validateEditText(editTextMinimumValue, validationTestNumbers);
+						validateEditText(editTextMaximumValue, validationTestNumbers);
 						if (flagEditTextMinimumValidation
 										&& flagEditTextMaximumValidation) {
 
@@ -204,12 +213,12 @@ public class AddNewQuestion extends Activity {
 											.edit();
 							sharedPreferencesEditor.putInt(
 											PREF_MINIMUM_RANGE_VALUE,
-											Integer.parseInt(minimumValue
+											Integer.parseInt(editTextMinimumValue
 															.getText()
 															.toString()));
 							sharedPreferencesEditor.putInt(
 											PREF_MAXIMUM_RANGE_VALUE,
-											Integer.parseInt(maximumValue
+											Integer.parseInt(editTextMaximumValue
 															.getText()
 															.toString()));
 
@@ -237,17 +246,12 @@ public class AddNewQuestion extends Activity {
 
 					}
 				});
-
 				rangeDialog.show();
-
-			
-			
 			}
 		});
-		
-		
 
-		final SparseArray<String> validationTestAlphaWithSpace = new SparseArray<String>();
+		// EditText definition and validation
+		validationTestAlphaWithSpace = new HashMap<Integer, String>();
 		validationTestAlphaWithSpace
 						.put(EditTextValidation.ALPHABETHIC_VALIDATION,
 										getResources().getString(
@@ -256,54 +260,47 @@ public class AddNewQuestion extends Activity {
 						.put(EditTextValidation.CHARACTER_VALIDATION,
 										getResources().getString(
 														R.string.editText_validation_error_char_not_allowed));
+		validationTestAlphaWithSpace
+						.put(EditTextValidation.NO_PIPE_CHAR_VALIDATION,
+										getResources().getString(
+														R.string.editText_validation_error_pipe_char_not_allowed));
 		// EditText Validation
-		final EditText editTextQuestionTitle = (EditText) AddNewQuestion.this
+		editTextQuestionTitle = (EditText) AddNewQuestion.this
 						.findViewById(R.id.activity_add_new_question_editText_question_title);
 
 		editTextQuestionTitle
 						.setOnFocusChangeListener(new OnFocusChangeListener() {
-
 							@Override
 							public void onFocusChange(View v, boolean hasFocus) {
 								if (!hasFocus) {
-									flagEditTextQuestionTitleValidation = EditTextValidation
-													.editTextValidation(
-																	(EditText) v,
-																	validationTestAlphaWithSpace);
+									validateEditText((EditText) v,
+													validationTestAlphaWithSpace);
 								}
-
 							}
 						});
 
-		final EditText editTextQuestionDescription = (EditText) AddNewQuestion.this
+		editTextQuestionDescription = (EditText) AddNewQuestion.this
 						.findViewById(R.id.activity_add_new_question_editText_question_description);
 		editTextQuestionDescription
 						.setOnFocusChangeListener(new OnFocusChangeListener() {
-
 							@Override
 							public void onFocusChange(View v, boolean hasFocus) {
 								if (!hasFocus) {
-									flagEditTextQuestionDescriptionValidation = EditTextValidation
-													.editTextValidation(
-																	(EditText) v,
-																	validationTestAlphaWithSpace);
+									validateEditText((EditText) v,
+													validationTestAlphaWithSpace);
 								}
-
 							}
 						});
 
-		final EditText editTextQuestion = (EditText) AddNewQuestion.this
+		editTextQuestion = (EditText) AddNewQuestion.this
 						.findViewById(R.id.activity_add_new_question_editText_question);
 		editTextQuestion.setOnFocusChangeListener(new OnFocusChangeListener() {
-
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
-					flagEditTextQuestionValidation = EditTextValidation
-									.editTextValidation((EditText) v,
-													validationTestAlphaWithSpace);
+					validateEditText((EditText) v,
+									validationTestAlphaWithSpace);
 				}
-
 			}
 		});
 
@@ -342,13 +339,14 @@ public class AddNewQuestion extends Activity {
 									Toast.LENGTH_LONG).show();
 					flagQuestionTypeValidation = false;
 				}
-
+				validateEditText(editTextQuestionTitle, validationTestAlphaWithSpace);
+				validateEditText(editTextQuestionDescription,validationTestAlphaWithSpace);
+				validateEditText(editTextQuestion,validationTestAlphaWithSpace);
+								
 				if (flagEditTextQuestionTitleValidation
 								&& flagEditTextQuestionDescriptionValidation
 								&& flagEditTextQuestionValidation
-								&& flagQuestionTypeValidation
-								&& flagEditTextMinimumValidation
-								&& flagEditTextMaximumValidation) {
+								&& flagQuestionTypeValidation) {
 					// Get data from fields
 					String questionTitle = (editTextQuestionTitle).getText()
 									.toString();
@@ -391,9 +389,40 @@ public class AddNewQuestion extends Activity {
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		
+	}
+	private void validateEditText(EditText editText,
+					HashMap<Integer, String> validationTestNumbers) {
+
+		String textToValidate = editText.getText().toString();
+		String errorMessage = EditTextValidation.editTextValidation(
+						textToValidate, validationTestNumbers);
+
+		if (editText.equals(editTextMinimumValue))
+			flagEditTextMinimumValidation = errorMessage == null ? true : false;
+		else if (editText.equals(editTextMaximumValue))
+			flagEditTextMaximumValidation = errorMessage == null ? true : false;
+		else if (editText.equals(editTextQuestion))
+			flagEditTextQuestionValidation = errorMessage == null ? true
+							: false;
+		else if (editText.equals(editTextQuestionTitle))
+			flagEditTextQuestionTitleValidation = errorMessage == null ? true
+							: false;
+		else if (editText.equals(editTextQuestionDescription))
+			flagEditTextQuestionDescriptionValidation = errorMessage == null ? true
+							: false;
+
+		if (errorMessage != null) {
+			editText.setError(errorMessage);
+		}
+
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_add_new_question, menu);
-		return true;
+		return false;
 	}
 
 }
