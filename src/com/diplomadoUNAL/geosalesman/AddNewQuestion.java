@@ -27,6 +27,8 @@ public class AddNewQuestion extends Activity {
 	private SharedPreferences sharedPreferences;
 	// SharedPreferences items for this activity
 	private static final String PREF_SELECTED_QUESTION_TYPE = "selectedQuestionType";
+	private static final String PREF_SELECTED_QUESTION_POSITION = "spinnerSelectionPosition";
+
 	// Range question type
 	private static final String QUESTION_TYPE_NONE_SELECTED = "questionTypeNoneSelected";
 	private static final String QUESTION_TYPE_RANGE = "questionTypeRange";
@@ -46,9 +48,11 @@ public class AddNewQuestion extends Activity {
 	private EditText editTextQuestionDescription;
 	private EditText editTextQuestion;
 
+	private Spinner spinnerQuestion;
+
 	private HashMap<Integer, String> validationTestNumbers = null;
-	private HashMap<Integer, String> validationTestAlphaWithSpace=null;
-	
+	private HashMap<Integer, String> validationTestAlphaWithSpace = null;
+
 	private void resetValidationFlags() {
 		flagEditTextQuestionValidation = Boolean.valueOf(false);
 		flagEditTextMinimumValidation = Boolean.valueOf(false);
@@ -66,9 +70,18 @@ public class AddNewQuestion extends Activity {
 		sharedPreferences = getSharedPreferences(PREFS_NAME, 0);
 		Editor sharedPreferencesEditor = sharedPreferences.edit();
 		sharedPreferencesEditor.clear();
+		// Store initial state of spinner
+		sharedPreferencesEditor.putString(PREF_SELECTED_QUESTION_TYPE,
+						QUESTION_TYPE_NONE_SELECTED);
+
 		sharedPreferencesEditor.commit();
 
-		final Spinner spinnerQuestion = (Spinner) findViewById(R.id.activity_add_new_question_spinner_question_type);
+	}
+
+	@SuppressLint("UseSparseArrays")
+	@Override
+	protected void onStart() {
+		super.onStart();
 
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 						AddNewQuestion.this, R.array.question_type_options,
@@ -87,7 +100,7 @@ public class AddNewQuestion extends Activity {
 			}
 		}
 		final int defaultSpinnerOptionPosition = tempPosition;
-
+		spinnerQuestion = (Spinner) findViewById(R.id.activity_add_new_question_spinner_question_type);
 		spinnerQuestion.setAdapter(adapter);
 		spinnerQuestion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -96,11 +109,16 @@ public class AddNewQuestion extends Activity {
 							int pos, long id) {
 				String selectedItem = (String) parent.getItemAtPosition(pos);
 
+				Editor sharedPreferencesEditor = sharedPreferences.edit();
+				// Save the position of the selected item
+				sharedPreferencesEditor.putInt(PREF_SELECTED_QUESTION_POSITION,
+								pos);
+
 				if (selectedItem.equals(AddNewQuestion.this
 								.getResources()
 								.getString(R.string.activity_add_new_question_spinner_option_default_option))) {
 					// Do nothing, but record that the Question Type is not selected yet
-					Editor sharedPreferencesEditor = sharedPreferences.edit();
+
 					sharedPreferencesEditor.putString(
 									PREF_SELECTED_QUESTION_TYPE,
 									QUESTION_TYPE_NONE_SELECTED);
@@ -139,12 +157,9 @@ public class AddNewQuestion extends Activity {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// TODO Auto-generated method stub
-
 			}
 
-			
-
+			@SuppressLint("UseSparseArrays")
 			private void rangeDiag() {
 				// Scale Question
 				// The scale dialog
@@ -179,33 +194,39 @@ public class AddNewQuestion extends Activity {
 				editTextMinimumValue = (EditText) rangeDialog
 								.findViewById(R.id.activity_add_new_question_editText_minimum_value);
 
-				editTextMinimumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
-					@Override
-					public void onFocusChange(View v, boolean hasFocus) {
-						if (!hasFocus) {
-							validateEditText((EditText) v,
-											validationTestNumbers);
-						}
-					}
-				});
+				editTextMinimumValue
+								.setOnFocusChangeListener(new OnFocusChangeListener() {
+									@Override
+									public void onFocusChange(View v,
+													boolean hasFocus) {
+										if (!hasFocus) {
+											validateEditText((EditText) v,
+															validationTestNumbers);
+										}
+									}
+								});
 
 				editTextMaximumValue = (EditText) rangeDialog
 								.findViewById(R.id.activity_add_new_question_editText_maximum_value);
-				editTextMaximumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
-					@Override
-					public void onFocusChange(View v, boolean hasFocus) {
-						if (!hasFocus) {
-							validateEditText((EditText) v,
-											validationTestNumbers);
-						}
-					}
-				});
+				editTextMaximumValue
+								.setOnFocusChangeListener(new OnFocusChangeListener() {
+									@Override
+									public void onFocusChange(View v,
+													boolean hasFocus) {
+										if (!hasFocus) {
+											validateEditText((EditText) v,
+															validationTestNumbers);
+										}
+									}
+								});
 
 				okButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						validateEditText(editTextMinimumValue, validationTestNumbers);
-						validateEditText(editTextMaximumValue, validationTestNumbers);
+						validateEditText(editTextMinimumValue,
+										validationTestNumbers);
+						validateEditText(editTextMaximumValue,
+										validationTestNumbers);
 						if (flagEditTextMinimumValidation
 										&& flagEditTextMaximumValidation) {
 
@@ -298,8 +319,7 @@ public class AddNewQuestion extends Activity {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
-					validateEditText((EditText) v,
-									validationTestAlphaWithSpace);
+					validateEditText((EditText) v, validationTestAlphaWithSpace);
 				}
 			}
 		});
@@ -339,10 +359,12 @@ public class AddNewQuestion extends Activity {
 									Toast.LENGTH_LONG).show();
 					flagQuestionTypeValidation = false;
 				}
-				validateEditText(editTextQuestionTitle, validationTestAlphaWithSpace);
-				validateEditText(editTextQuestionDescription,validationTestAlphaWithSpace);
-				validateEditText(editTextQuestion,validationTestAlphaWithSpace);
-								
+				validateEditText(editTextQuestionTitle,
+								validationTestAlphaWithSpace);
+				validateEditText(editTextQuestionDescription,
+								validationTestAlphaWithSpace);
+				validateEditText(editTextQuestion, validationTestAlphaWithSpace);
+
 				if (flagEditTextQuestionTitleValidation
 								&& flagEditTextQuestionDescriptionValidation
 								&& flagEditTextQuestionValidation
@@ -385,20 +407,184 @@ public class AddNewQuestion extends Activity {
 
 			}
 		});
-
 	}
+	/*
+@Override
+protected void onSaveInstanceState(Bundle outState) {
+	super.onSaveInstanceState(outState);
+
+	
+
+	Editor sharedPreferencesEditor = sharedPreferences.edit();
+	// Save EditText contents and error messages, if any
+	// editTextMaximumValue
+	if(editTextMaximumValue!=null){
+	sharedPreferencesEditor
+					.putString(getResources()
+									.getString(R.string.activity_add_new_question_maximum_value_hint),
+									editTextMaximumValue.getText()
+													.toString());
+	sharedPreferencesEditor
+					.putString(getResources()
+									.getString(R.string.activity_add_new_question_maximum_value_hint)
+									+ "error_message", editTextMaximumValue
+									.getError().toString());
+	}
+	// editTextMinimumValue
+	if(editTextMinimumValue!=null){
+	sharedPreferencesEditor
+					.putString(getResources()
+									.getString(R.string.activity_add_new_question_minimum_value_hint),
+									editTextMinimumValue.getText()
+													.toString());
+	sharedPreferencesEditor
+					.putString(getResources()
+									.getString(R.string.activity_add_new_question_minimum_value_hint)
+									+ "error_message", editTextMinimumValue
+									.getError().toString());
+	}
+	// editTextQuestionDescription
+	if(editTextQuestionDescription!=null){
+	sharedPreferencesEditor
+					.putString(getResources()
+									.getString(R.string.activity_add_new_question_type_question_description_hint),
+									editTextQuestionDescription.getText()
+													.toString());
+	sharedPreferencesEditor
+					.putString(getResources()
+									.getString(R.string.activity_add_new_question_type_question_description_hint)
+									+ "error_message",
+									editTextQuestionDescription.getError()
+													.toString());
+	}
+	// editTextQuestionTitle
+	if(editTextQuestionTitle!=null){
+	sharedPreferencesEditor
+					.putString(getResources()
+									.getString(R.string.activity_add_new_question_type_question_title_hint),
+									editTextQuestionTitle.getText()
+													.toString());
+	sharedPreferencesEditor
+					.putString(getResources()
+									.getString(R.string.activity_add_new_question_type_question_title_hint)
+									+ "error_message",
+									editTextQuestionTitle.getError()
+													.toString());
+	}
+	// editTextQuestion
+	if(editTextQuestion!=null){
+	sharedPreferencesEditor
+					.putString(getResources()
+									.getString(R.string.activity_add_new_question_type_your_question_hint),
+									editTextQuestion.getText().toString());
+	sharedPreferencesEditor
+					.putString(getResources()
+									.getString(R.string.activity_add_new_question_type_your_question_hint)
+									+ "error_message", editTextQuestion
+									.getError().toString());
+	}
+
+}*/
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-		
+	protected void onResume() {
+		super.onResume();
+		String message = new String();
+		// editTextMaximumValue
+		if (editTextMaximumValue != null) {
+			message = sharedPreferences
+							.getString(getResources()
+											.getString(R.string.activity_add_new_question_maximum_value_hint),
+											"");
+			if (!message.equals(""))
+				editTextMaximumValue.setText(message);
+
+			message = sharedPreferences
+							.getString(getResources()
+											.getString(R.string.activity_add_new_question_maximum_value_hint)
+											+ "error_message", "");
+
+			if (!message.equals(""))
+				editTextMaximumValue.setError(message);
+		}
+		// editTextMinimumValue
+		if (editTextMinimumValue != null) {
+			message = sharedPreferences
+							.getString(getResources()
+											.getString(R.string.activity_add_new_question_minimum_value_hint),
+											"");
+			if (!message.equals(""))
+				editTextMinimumValue.setText(message);
+			message = sharedPreferences
+							.getString(getResources()
+											.getString(R.string.activity_add_new_question_minimum_value_hint)
+											+ "error_message", "");
+			if (!message.equals(""))
+				editTextMinimumValue.setError(message);
+		}
+		// editTextQuestionDescription
+		if (editTextQuestionDescription != null) {
+			message = sharedPreferences
+							.getString(getResources()
+											.getString(R.string.activity_add_new_question_type_question_description_hint),
+											"");
+			if (!message.equals(""))
+				editTextQuestionDescription.setText(message);
+
+			message = sharedPreferences
+							.getString(getResources()
+											.getString(R.string.activity_add_new_question_type_question_description_hint)
+											+ "error_message", "");
+			if (!message.equals(""))
+				editTextQuestionDescription.setError(message);
+		}
+
+		// editTextQuestionTitle
+		if (editTextQuestionTitle != null) {
+			message = sharedPreferences
+							.getString(getResources()
+											.getString(R.string.activity_add_new_question_type_question_title_hint),
+											"");
+			if (!message.equals(""))
+				editTextQuestionTitle.setText(message);
+
+			message = sharedPreferences
+							.getString(getResources()
+											.getString(R.string.activity_add_new_question_type_question_title_hint)
+											+ "error_message", "");
+			if (!message.equals(""))
+				editTextQuestionTitle.setError(message);
+		}
+
+		// editTextQuestion
+		if (editTextQuestion != null) {
+			message = sharedPreferences
+							.getString(getResources()
+											.getString(R.string.activity_add_new_question_type_your_question_hint),
+											"");
+			if (!message.equals(""))
+				editTextQuestion.setText(message);
+
+			message = sharedPreferences
+							.getString(getResources()
+											.getString(R.string.activity_add_new_question_type_your_question_hint)
+											+ "error_message", "");
+			if (!message.equals(""))
+				editTextQuestion.setError(message);
+		}
+
+		// spinner state
+		if (spinnerQuestion != null)
+			spinnerQuestion.setSelection(sharedPreferences.getInt(
+							PREF_SELECTED_QUESTION_POSITION, 0));
 	}
+
 	private void validateEditText(EditText editText,
-					HashMap<Integer, String> validationTestNumbers) {
+					HashMap<Integer, String> validationTests) {
 
 		String textToValidate = editText.getText().toString();
 		String errorMessage = EditTextValidation.editTextValidation(
-						textToValidate, validationTestNumbers);
+						textToValidate, validationTests);
 
 		if (editText.equals(editTextMinimumValue))
 			flagEditTextMinimumValidation = errorMessage == null ? true : false;
