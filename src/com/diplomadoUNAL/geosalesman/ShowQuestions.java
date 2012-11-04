@@ -11,12 +11,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TwoLineListItem;
-import android.widget.AdapterView.OnItemClickListener;
 
-import com.diplomadoUNAL.geosalesman.database.ClientTable;
 import com.diplomadoUNAL.geosalesman.database.QuestionTable;
 import com.diplomadoUNAL.geosalesman.database.SchemaHelper;
 
@@ -28,7 +27,7 @@ public class ShowQuestions extends Activity implements OnItemClickListener {
 		setContentView(R.layout.activity_show_questions);
 
 		ListView listViewShowQuestions = (ListView) this
-				.findViewById(R.id.listView_show_question_menu);
+				.findViewById(R.id.activity_show_questions_listView_show_question_menu);
 
 		SchemaHelper schemaHelper = new SchemaHelper(this);
 		ArrayList<HashMap<String, String>> questionTitlesAndDescriptions = schemaHelper

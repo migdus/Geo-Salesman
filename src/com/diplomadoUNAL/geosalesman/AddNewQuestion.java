@@ -47,8 +47,8 @@ public class AddNewQuestion extends Activity {
 	private EditText editTextQuestion;
 
 	private HashMap<Integer, String> validationTestNumbers = null;
-	private HashMap<Integer, String> validationTestAlphaWithSpace=null;
-	
+	private HashMap<Integer, String> validationTestAlphaWithSpace = null;
+
 	private void resetValidationFlags() {
 		flagEditTextQuestionValidation = Boolean.valueOf(false);
 		flagEditTextMinimumValidation = Boolean.valueOf(false);
@@ -67,6 +67,11 @@ public class AddNewQuestion extends Activity {
 		Editor sharedPreferencesEditor = sharedPreferences.edit();
 		sharedPreferencesEditor.clear();
 		sharedPreferencesEditor.commit();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
 
 		final Spinner spinnerQuestion = (Spinner) findViewById(R.id.activity_add_new_question_spinner_question_type);
 
@@ -143,8 +148,6 @@ public class AddNewQuestion extends Activity {
 
 			}
 
-			
-
 			private void rangeDiag() {
 				// Scale Question
 				// The scale dialog
@@ -179,33 +182,39 @@ public class AddNewQuestion extends Activity {
 				editTextMinimumValue = (EditText) rangeDialog
 								.findViewById(R.id.activity_add_new_question_editText_minimum_value);
 
-				editTextMinimumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
-					@Override
-					public void onFocusChange(View v, boolean hasFocus) {
-						if (!hasFocus) {
-							validateEditText((EditText) v,
-											validationTestNumbers);
-						}
-					}
-				});
+				editTextMinimumValue
+								.setOnFocusChangeListener(new OnFocusChangeListener() {
+									@Override
+									public void onFocusChange(View v,
+													boolean hasFocus) {
+										if (!hasFocus) {
+											validateEditText((EditText) v,
+															validationTestNumbers);
+										}
+									}
+								});
 
 				editTextMaximumValue = (EditText) rangeDialog
 								.findViewById(R.id.activity_add_new_question_editText_maximum_value);
-				editTextMaximumValue.setOnFocusChangeListener(new OnFocusChangeListener() {
-					@Override
-					public void onFocusChange(View v, boolean hasFocus) {
-						if (!hasFocus) {
-							validateEditText((EditText) v,
-											validationTestNumbers);
-						}
-					}
-				});
+				editTextMaximumValue
+								.setOnFocusChangeListener(new OnFocusChangeListener() {
+									@Override
+									public void onFocusChange(View v,
+													boolean hasFocus) {
+										if (!hasFocus) {
+											validateEditText((EditText) v,
+															validationTestNumbers);
+										}
+									}
+								});
 
 				okButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						validateEditText(editTextMinimumValue, validationTestNumbers);
-						validateEditText(editTextMaximumValue, validationTestNumbers);
+						validateEditText(editTextMinimumValue,
+										validationTestNumbers);
+						validateEditText(editTextMaximumValue,
+										validationTestNumbers);
 						if (flagEditTextMinimumValidation
 										&& flagEditTextMaximumValidation) {
 
@@ -298,8 +307,7 @@ public class AddNewQuestion extends Activity {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
-					validateEditText((EditText) v,
-									validationTestAlphaWithSpace);
+					validateEditText((EditText) v, validationTestAlphaWithSpace);
 				}
 			}
 		});
@@ -339,10 +347,12 @@ public class AddNewQuestion extends Activity {
 									Toast.LENGTH_LONG).show();
 					flagQuestionTypeValidation = false;
 				}
-				validateEditText(editTextQuestionTitle, validationTestAlphaWithSpace);
-				validateEditText(editTextQuestionDescription,validationTestAlphaWithSpace);
-				validateEditText(editTextQuestion,validationTestAlphaWithSpace);
-								
+				validateEditText(editTextQuestionTitle,
+								validationTestAlphaWithSpace);
+				validateEditText(editTextQuestionDescription,
+								validationTestAlphaWithSpace);
+				validateEditText(editTextQuestion, validationTestAlphaWithSpace);
+
 				if (flagEditTextQuestionTitleValidation
 								&& flagEditTextQuestionDescriptionValidation
 								&& flagEditTextQuestionValidation
@@ -385,14 +395,8 @@ public class AddNewQuestion extends Activity {
 
 			}
 		});
-
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		
-	}
 	private void validateEditText(EditText editText,
 					HashMap<Integer, String> validationTestNumbers) {
 

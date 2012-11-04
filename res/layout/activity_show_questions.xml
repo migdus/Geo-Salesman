@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <ListView
-        android:id="@+id/listView_show_question_menu"
+        android:id="@+id/activity_show_questions_listView_show_question_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
