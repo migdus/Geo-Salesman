@@ -31,6 +31,7 @@ public class AddNewQuestion extends Activity {
 	private static final String QUESTION_TYPE_NONE_SELECTED = "questionTypeNoneSelected";
 	private static final String QUESTION_TYPE_RANGE = "questionTypeRange";
 	private static final String QUESTION_TYPE_YES_NO = "questionTypeYesNo";
+	private static final String QUESTION_TYPE_OPEN = "questionTypeOpen";
 	private static final String PREF_MINIMUM_RANGE_VALUE = "addNewQuestionSaveMinimumRangeValue";
 	private static final String PREF_MAXIMUM_RANGE_VALUE = "addNewQuestionSaveMaximumRangeValue";
 	// validation flags
@@ -70,6 +71,7 @@ public class AddNewQuestion extends Activity {
 		sharedPreferencesEditor.commit();
 	}
 
+	@SuppressLint("UseSparseArrays")
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -101,12 +103,11 @@ public class AddNewQuestion extends Activity {
 			public void onItemSelected(AdapterView<?> parent, View view,
 							int pos, long id) {
 				String selectedItem = (String) parent.getItemAtPosition(pos);
+				Editor sharedPreferencesEditor = sharedPreferences.edit();
 				// Do nothing, but record that the Question Type is not selected yet
 				if (selectedItem.equals(AddNewQuestion.this
 								.getResources()
 								.getString(R.string.activity_add_new_question_spinner_option_default_option))) {
-
-					Editor sharedPreferencesEditor = sharedPreferences.edit();
 					sharedPreferencesEditor.putString(
 									PREF_SELECTED_QUESTION_TYPE,
 									QUESTION_TYPE_NONE_SELECTED);
@@ -119,8 +120,6 @@ public class AddNewQuestion extends Activity {
 								.equals(AddNewQuestion.this
 												.getResources()
 												.getString(R.string.activity_add_new_question_spinner_option_yes_no))) {
-
-					Editor sharedPreferencesEditor = sharedPreferences.edit();
 					sharedPreferencesEditor.putString(
 									PREF_SELECTED_QUESTION_TYPE,
 									QUESTION_TYPE_YES_NO);
@@ -130,16 +129,20 @@ public class AddNewQuestion extends Activity {
 								.equals(AddNewQuestion.this
 												.getResources()
 												.getString(R.string.activity_add_new_question_spinner_multiple_choice_answer))) {
-					// Multiple choice answer
+					// Multiple choice answer question
 					Toast.makeText(AddNewQuestion.this, "Not implemented yet",
 									Toast.LENGTH_LONG).show();
+					//Open question
 				} else if (selectedItem
 								.equals(AddNewQuestion.this
 												.getResources()
 												.getString(R.string.activity_add_new_question_spinner_option_open))) {
-					// Open question
-					Toast.makeText(AddNewQuestion.this, "Not implemented yet",
-									Toast.LENGTH_LONG).show();
+					sharedPreferencesEditor.putString(
+									PREF_SELECTED_QUESTION_TYPE,
+									QUESTION_TYPE_OPEN);
+					sharedPreferencesEditor.commit();
+					flagQuestionTypeValidation = true;
+					//Scale question
 				} else if (selectedItem
 								.equals(AddNewQuestion.this
 												.getResources()
@@ -354,6 +357,9 @@ public class AddNewQuestion extends Activity {
 									+ "|"
 									+ getResources().getString(
 													R.string.activity_add_new_question_no_answer_option);
+					flagQuestionTypeValidation = true;
+				} else if(questionType.equals(QUESTION_TYPE_OPEN)){
+					answerOptions = new String();
 					flagQuestionTypeValidation = true;
 				}
 
