@@ -2,6 +2,7 @@
 
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
+    
 
     <!-- Validation error messages for EditText -->
     <string name="editText_validation_error_empty_field">The field cannot be empty.</string>
@@ -61,5 +62,8 @@
     <string name="activity_add_new_question_scale_selection_dialog_message">Please select a minimum and a maximun number</string>
     <string name="activity_add_new_question_maximum_value_hint">Maximum Value</string>
     <string name="activity_add_new_question_minimum_value_hint">Minimum Value</string>
+    <!-- Yes/No answer options -->
+    <string name = "activity_add_new_question_yes_answer_option">Yes</string>
+    <string name = "activity_add_new_question_no_answer_option">No</string>
 
 </resources>

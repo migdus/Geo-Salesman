@@ -30,6 +30,7 @@ public class AddNewQuestion extends Activity {
 	// Range question type
 	private static final String QUESTION_TYPE_NONE_SELECTED = "questionTypeNoneSelected";
 	private static final String QUESTION_TYPE_RANGE = "questionTypeRange";
+	private static final String QUESTION_TYPE_YES_NO = "questionTypeYesNo";
 	private static final String PREF_MINIMUM_RANGE_VALUE = "addNewQuestionSaveMinimumRangeValue";
 	private static final String PREF_MAXIMUM_RANGE_VALUE = "addNewQuestionSaveMaximumRangeValue";
 	// validation flags
@@ -100,11 +101,11 @@ public class AddNewQuestion extends Activity {
 			public void onItemSelected(AdapterView<?> parent, View view,
 							int pos, long id) {
 				String selectedItem = (String) parent.getItemAtPosition(pos);
-
+				// Do nothing, but record that the Question Type is not selected yet
 				if (selectedItem.equals(AddNewQuestion.this
 								.getResources()
 								.getString(R.string.activity_add_new_question_spinner_option_default_option))) {
-					// Do nothing, but record that the Question Type is not selected yet
+
 					Editor sharedPreferencesEditor = sharedPreferences.edit();
 					sharedPreferencesEditor.putString(
 									PREF_SELECTED_QUESTION_TYPE,
@@ -112,13 +113,19 @@ public class AddNewQuestion extends Activity {
 					sharedPreferencesEditor.commit();
 					flagQuestionTypeValidation = false;
 
-				} else if (selectedItem
+				}
+				// Yes/No Question
+				else if (selectedItem
 								.equals(AddNewQuestion.this
 												.getResources()
 												.getString(R.string.activity_add_new_question_spinner_option_yes_no))) {
-					// Yes/No Question
-					Toast.makeText(AddNewQuestion.this, "Not implemented yet",
-									Toast.LENGTH_LONG).show();
+
+					Editor sharedPreferencesEditor = sharedPreferences.edit();
+					sharedPreferencesEditor.putString(
+									PREF_SELECTED_QUESTION_TYPE,
+									QUESTION_TYPE_YES_NO);
+					sharedPreferencesEditor.commit();
+					flagQuestionTypeValidation = true;
 				} else if (selectedItem
 								.equals(AddNewQuestion.this
 												.getResources()
@@ -341,7 +348,16 @@ public class AddNewQuestion extends Activity {
 													.getInt(PREF_MINIMUM_RANGE_VALUE,
 																	-1));
 					flagQuestionTypeValidation = true;
-				} else {
+				} else if (questionType.equals(QUESTION_TYPE_YES_NO)) {
+					answerOptions = getResources()
+									.getString(R.string.activity_add_new_question_yes_answer_option)
+									+ "|"
+									+ getResources().getString(
+													R.string.activity_add_new_question_no_answer_option);
+					flagQuestionTypeValidation = true;
+				}
+
+				else {
 					// TODO Implement other question type
 					Toast.makeText(AddNewQuestion.this, "Not implemented yet",
 									Toast.LENGTH_LONG).show();
