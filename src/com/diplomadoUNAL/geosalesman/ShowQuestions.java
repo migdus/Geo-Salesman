@@ -93,7 +93,7 @@ public class ShowQuestions extends Activity {
 									.putExtra(AddNewQuestion.ACTIVITY_MODE_DB_ITEM_ID,
 													dbIdListViewRelationship
 																	.get((int) id));
-					startActivity(launchAddNewQuestion);
+					startActivityForResult(launchAddNewQuestion, 1);
 				}
 
 			}
@@ -115,7 +115,7 @@ public class ShowQuestions extends Activity {
 			launchAddNewQuestion.putExtra(
 							AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
 							AddNewQuestion.ACTIVITY_MODE_ADD_NEW);
-			startActivity(launchAddNewQuestion);
+			startActivityForResult(launchAddNewQuestion, 1);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

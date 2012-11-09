@@ -64,9 +64,9 @@ public class AddNewQuestion extends Activity {
 	public final static String ACTIVITY_MODE_UPDATE = "update";
 	public final static String ACTIVITY_MODE_DB_ITEM_ID = "itemId";
 
-	//Checks if the spinner selected item was changed for the code or the user
+	// Checks if the spinner selected item was changed for the code or the user
 	boolean firstSelected = true;
-	
+
 	private void resetValidationFlags() {
 		flagEditTextQuestionValidation = Boolean.valueOf(false);
 		flagEditTextMinimumValidation = Boolean.valueOf(false);
@@ -230,7 +230,6 @@ public class AddNewQuestion extends Activity {
 		spinnerQuestion.setAdapter(adapter);
 		spinnerQuestion.setSelection(defaultSpinnerOptionPosition);
 
-		
 		spinnerQuestion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 			@Override
@@ -238,8 +237,9 @@ public class AddNewQuestion extends Activity {
 							int pos, long id) {
 				if (firstSelected) {
 					firstSelected = false;
-				}else{
-					String selectedItem = (String) parent.getItemAtPosition(pos);
+				} else {
+					String selectedItem = (String) parent
+									.getItemAtPosition(pos);
 					Editor sharedPreferencesEditor = sharedPreferences.edit();
 					// Do nothing, but record that the Question Type is not selected yet
 					if (selectedItem.equals(AddNewQuestion.this
@@ -267,7 +267,8 @@ public class AddNewQuestion extends Activity {
 													.getResources()
 													.getString(R.string.activity_add_new_question_spinner_multiple_choice_answer))) {
 						// Multiple choice answer question
-						Toast.makeText(AddNewQuestion.this, "Not implemented yet",
+						Toast.makeText(AddNewQuestion.this,
+										"Not implemented yet",
 										Toast.LENGTH_LONG).show();
 						// Open question
 					} else if (selectedItem
@@ -499,22 +500,27 @@ public class AddNewQuestion extends Activity {
 															R.string.database_success_storing_data),
 											Toast.LENGTH_LONG).show();
 						}
+						// Go to previous activity
+						finish();
 					} else if (intentMsg
 									.equals(AddNewQuestion.ACTIVITY_MODE_UPDATE)) {
-						schemaHelper.updateQuestion(
+						int result = schemaHelper.updateQuestion(
 										intent.getStringExtra(AddNewQuestion.ACTIVITY_MODE_DB_ITEM_ID),
 										questionTitle, questionDescription,
 										question, questionType, answerOptions);
+						if (result > 0)
+							Toast.makeText(AddNewQuestion.this,
+											getResources().getString(
+															R.string.database_success_updating_data),
+											Toast.LENGTH_LONG).show();
+						else
+							Toast.makeText(AddNewQuestion.this,
+											getResources().getString(
+															R.string.database_error_storing_data),
+											Toast.LENGTH_LONG).show();
+						// Go to previous activity
+						finish();
 
-					}
-					// Go to ShowQuestions activity
-					if (intentMsg.equals(AddNewQuestion.ACTIVITY_MODE_ADD_NEW)
-									|| intentMsg.equals(AddNewQuestion.ACTIVITY_MODE_READ_ONLY)
-									|| intentMsg.equals(AddNewQuestion.ACTIVITY_MODE_UPDATE)) {
-						Intent launchAddNewQuestion = new Intent(
-										AddNewQuestion.this,
-										ShowQuestions.class);
-						startActivity(launchAddNewQuestion);
 					}
 
 				}
@@ -529,9 +535,10 @@ public class AddNewQuestion extends Activity {
 			@Override
 			public void onClick(View v) {
 				resetValidationFlags();
-				Intent intent = new Intent(AddNewQuestion.this,
-								ShowQuestions.class);
-				startActivity(intent);
+				/*
+				 * Intent intent = new Intent(AddNewQuestion.this, ShowQuestions.class); startActivity(intent);
+				 */
+				finish();
 
 			}
 		});

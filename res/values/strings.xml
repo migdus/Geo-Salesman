@@ -15,6 +15,9 @@
     <!-- Database related messages -->
     <string name="database_error_storing_data">Error storing data in the database.</string>
     <string name="database_success_storing_data">Data stored successfully.</string>
+    <string name="database_success_updating_data">Data updated successfully.</string>
+    <string name="database_error_updating_data">Error updating data in the database.</string>
+    
     <string name="app_name">Geo Salesman</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
