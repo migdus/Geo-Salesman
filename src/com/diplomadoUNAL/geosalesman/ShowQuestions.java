@@ -28,7 +28,7 @@ public class ShowQuestions extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_show_questions);
+		setContentView(R.layout.listview);
 
 		ListView listViewShowQuestions = (ListView) this
 						.findViewById(R.id.activity_show_questions_listView_show_question_menu);
