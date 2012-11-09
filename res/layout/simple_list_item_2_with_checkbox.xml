@@ -20,24 +20,28 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@android:id/text1"
+        android:id="@+id/simple_list_item_2_with_checkbox_text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_marginLeft="?android:attr/listPreferredItemPaddingLeft"
         android:layout_marginTop="8dip"
         android:textAppearance="?android:attr/textAppearanceListItem" />
 
     <TextView
-        android:id="@android:id/text2"
+        android:id="@+id/simple_list_item_2_with_checkbox_text2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@android:id/text1"
-        android:layout_below="@android:id/text1"
+        android:layout_below="@+id/simple_list_item_2_with_checkbox_text1"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/simple_list_item_2_with_checkbox_checkBox"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>
