@@ -31,7 +31,7 @@ public class ShowQuestions extends Activity {
 		setContentView(R.layout.listview);
 
 		ListView listViewShowQuestions = (ListView) this
-						.findViewById(R.id.activity_show_questions_listView_show_question_menu);
+						.findViewById(R.id.listView_show_question_menu);
 
 		SchemaHelper schemaHelper = new SchemaHelper(this);
 		ArrayList<HashMap<String, String>> questionTitlesAndDescriptions = schemaHelper
@@ -81,15 +81,20 @@ public class ShowQuestions extends Activity {
 								.getText1().getText();
 				String selectedOptionSecondLine = (String) ((TwoLineListItem) view)
 								.getText1().getText();
-
-				Intent launchAddNewQuestion = new Intent(ShowQuestions.this,
-								AddNewQuestion.class);
-				launchAddNewQuestion.putExtra(
-								AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
-								AddNewQuestion.ACTIVITY_MODE_UPDATE).putExtra(
-								AddNewQuestion.ACTIVITY_MODE_DB_ITEM_ID,
-								dbIdListViewRelationship.get((int) id));
-				startActivity(launchAddNewQuestion);
+				if (!selectedOptionFirstLine.equals(getResources().getString(
+								R.string.no_questions_found))
+								&& !selectedOptionSecondLine
+												.equals(R.string.tap_question_menu_to_add)) {
+					Intent launchAddNewQuestion = new Intent(
+									ShowQuestions.this, AddNewQuestion.class);
+					launchAddNewQuestion
+									.putExtra(AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
+													AddNewQuestion.ACTIVITY_MODE_UPDATE)
+									.putExtra(AddNewQuestion.ACTIVITY_MODE_DB_ITEM_ID,
+													dbIdListViewRelationship
+																	.get((int) id));
+					startActivity(launchAddNewQuestion);
+				}
 
 			}
 		});
