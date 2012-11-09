@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,48 +22,77 @@ import android.widget.TwoLineListItem;
 import com.diplomadoUNAL.geosalesman.database.QuestionTable;
 import com.diplomadoUNAL.geosalesman.database.SchemaHelper;
 
-public class ShowQuestions extends Activity implements OnItemClickListener {
+public class ShowQuestions extends Activity {
 
+	@SuppressLint("UseSparseArrays")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_show_questions);
 
 		ListView listViewShowQuestions = (ListView) this
-				.findViewById(R.id.activity_show_questions_listView_show_question_menu);
+						.findViewById(R.id.activity_show_questions_listView_show_question_menu);
 
 		SchemaHelper schemaHelper = new SchemaHelper(this);
 		ArrayList<HashMap<String, String>> questionTitlesAndDescriptions = schemaHelper
-				.getQuestionsTitlesAndDescriptions();
+						.getQuestionsTitlesAndDescriptions();
 
 		List<Map<String, String>> data = new ArrayList<Map<String, String>>();
 
+		final HashMap<Integer, String> dbIdListViewRelationship = new HashMap<Integer, String>();
+		int listViewIndex = 0;
 		if (questionTitlesAndDescriptions.size() > 0) {
 			Iterator<HashMap<String, String>> iterQTAD = questionTitlesAndDescriptions
-					.iterator();
+							.iterator();
 			while (iterQTAD.hasNext()) {
 				HashMap<String, String> row = iterQTAD.next();
 				Map<String, String> datum = new HashMap<String, String>(2);
 				datum.put("Title", row.get(QuestionTable.QUESTION_TITLE));
 				datum.put("Description",
-						row.get(QuestionTable.QUESTION_DESCRIPTION));
+								row.get(QuestionTable.QUESTION_DESCRIPTION));
+				dbIdListViewRelationship.put(listViewIndex,
+								row.get(QuestionTable.ID));
 				data.add(datum);
+				listViewIndex++;
 			}
-		}
-		else{
+		} else {
 			Map<String, String> datum = new HashMap<String, String>(2);
-			datum.put("Title", getResources().getString(R.string.no_questions_found));
-			datum.put("Description",getResources().getString(R.string.tap_question_menu_to_add));
+			datum.put("Title",
+							getResources().getString(
+											R.string.no_questions_found));
+			datum.put("Description",
+							getResources().getString(
+											R.string.tap_question_menu_to_add));
 			data.add(datum);
+			this.openOptionsMenu();
 		}
 
 		SimpleAdapter adapter = new SimpleAdapter(this, data,
-				android.R.layout.simple_list_item_2, new String[] { "Title",
-						"Description" }, new int[] { android.R.id.text1,
-						android.R.id.text2 });
+						android.R.layout.simple_list_item_2, new String[] {
+								"Title", "Description" }, new int[] {
+								android.R.id.text1, android.R.id.text2 });
 		listViewShowQuestions.setAdapter(adapter);
 
-		listViewShowQuestions.setOnItemClickListener(this);
+		listViewShowQuestions.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+				String selectedOptionFirstLine = (String) ((TwoLineListItem) view)
+								.getText1().getText();
+				String selectedOptionSecondLine = (String) ((TwoLineListItem) view)
+								.getText1().getText();
+
+				Intent launchAddNewQuestion = new Intent(ShowQuestions.this,
+								AddNewQuestion.class);
+				launchAddNewQuestion.putExtra(
+								AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
+								AddNewQuestion.ACTIVITY_MODE_UPDATE).putExtra(
+								AddNewQuestion.ACTIVITY_MODE_DB_ITEM_ID,
+								dbIdListViewRelationship.get((int) id));
+				startActivity(launchAddNewQuestion);
+
+			}
+		});
 
 	}
 
@@ -71,23 +101,19 @@ public class ShowQuestions extends Activity implements OnItemClickListener {
 		getMenuInflater().inflate(R.menu.activity_show_questions, menu);
 		return true;
 	}
-	
+
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {	
-		switch(item.getItemId()){
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
 		case R.id.activity_show_questions_add_new_question:
-			Intent launchAddNewQuestion = new Intent(this,AddNewQuestion.class);
+			Intent launchAddNewQuestion = new Intent(this, AddNewQuestion.class);
+			launchAddNewQuestion.putExtra(
+							AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
+							AddNewQuestion.ACTIVITY_MODE_ADD_NEW);
 			startActivity(launchAddNewQuestion);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		String selectedOption = (String) ((TwoLineListItem) arg1).getText1()
-				.getText();
-
-	}
-	
 }

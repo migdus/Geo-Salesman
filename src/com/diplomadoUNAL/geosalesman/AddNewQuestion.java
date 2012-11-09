@@ -5,6 +5,7 @@ import java.util.HashMap;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.diplomadoUNAL.geosalesman.database.QuestionTable;
 import com.diplomadoUNAL.geosalesman.database.SchemaHelper;
 import com.diplomadoUNAL.geosalesman.util.EditTextValidation;
 
@@ -48,9 +50,23 @@ public class AddNewQuestion extends Activity {
 	private EditText editTextQuestionDescription;
 	private EditText editTextQuestion;
 
+	private String editTextMinimumValueTemp;
+	private String editTextMaximumValueTemp;
+
 	private HashMap<Integer, String> validationTestNumbers = null;
 	private HashMap<Integer, String> validationTestAlphaWithSpace = null;
 
+	// Intent messages
+	// Mode of this activity
+	public final static String ADD_NEW_QUESTION_ACTIVITY_MODE = "com.diplomadoUNAL.geosalesman.ADD_NEW_QUESTION_ACTIVITY_MODE";
+	public final static String ACTIVITY_MODE_READ_ONLY = "readOnly";
+	public final static String ACTIVITY_MODE_ADD_NEW = "addNew";
+	public final static String ACTIVITY_MODE_UPDATE = "update";
+	public final static String ACTIVITY_MODE_DB_ITEM_ID = "itemId";
+
+	//Checks if the spinner selected item was changed for the code or the user
+	boolean firstSelected = true;
+	
 	private void resetValidationFlags() {
 		flagEditTextQuestionValidation = Boolean.valueOf(false);
 		flagEditTextMinimumValidation = Boolean.valueOf(false);
@@ -69,6 +85,59 @@ public class AddNewQuestion extends Activity {
 		Editor sharedPreferencesEditor = sharedPreferences.edit();
 		sharedPreferencesEditor.clear();
 		sharedPreferencesEditor.commit();
+
+		// EditText definition and validation
+		validationTestAlphaWithSpace = new HashMap<Integer, String>();
+		validationTestAlphaWithSpace
+						.put(EditTextValidation.ALPHABETHIC_VALIDATION,
+										getResources().getString(
+														R.string.editText_validation_error_alpha_only));
+		validationTestAlphaWithSpace
+						.put(EditTextValidation.CHARACTER_VALIDATION,
+										getResources().getString(
+														R.string.editText_validation_error_char_not_allowed));
+		validationTestAlphaWithSpace
+						.put(EditTextValidation.NO_PIPE_CHAR_VALIDATION,
+										getResources().getString(
+														R.string.editText_validation_error_pipe_char_not_allowed));
+		// EditText Validation
+		editTextQuestionTitle = (EditText) AddNewQuestion.this
+						.findViewById(R.id.activity_add_new_question_editText_question_title);
+
+		editTextQuestionTitle
+						.setOnFocusChangeListener(new OnFocusChangeListener() {
+							@Override
+							public void onFocusChange(View v, boolean hasFocus) {
+								if (!hasFocus) {
+									validateEditText((EditText) v,
+													validationTestAlphaWithSpace);
+								}
+							}
+						});
+
+		editTextQuestionDescription = (EditText) AddNewQuestion.this
+						.findViewById(R.id.activity_add_new_question_editText_question_description);
+		editTextQuestionDescription
+						.setOnFocusChangeListener(new OnFocusChangeListener() {
+							@Override
+							public void onFocusChange(View v, boolean hasFocus) {
+								if (!hasFocus) {
+									validateEditText((EditText) v,
+													validationTestAlphaWithSpace);
+								}
+							}
+						});
+
+		editTextQuestion = (EditText) AddNewQuestion.this
+						.findViewById(R.id.activity_add_new_question_editText_question);
+		editTextQuestion.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					validateEditText((EditText) v, validationTestAlphaWithSpace);
+				}
+			}
+		});
 	}
 
 	@SuppressLint("UseSparseArrays")
@@ -76,6 +145,49 @@ public class AddNewQuestion extends Activity {
 	protected void onStart() {
 		super.onStart();
 
+		final Intent intent = getIntent();
+
+		int dbId = -1;
+		// Fill the form fields according with database information
+		if (intent.hasExtra(ADD_NEW_QUESTION_ACTIVITY_MODE)
+						&& (intent.getStringExtra(
+										ADD_NEW_QUESTION_ACTIVITY_MODE).equals(
+										ACTIVITY_MODE_READ_ONLY) || intent
+										.getStringExtra(ADD_NEW_QUESTION_ACTIVITY_MODE)
+										.equals(ACTIVITY_MODE_UPDATE))) {
+
+			dbId = Integer.parseInt(intent
+							.getStringExtra(ACTIVITY_MODE_DB_ITEM_ID));
+			SchemaHelper schemaHelper = new SchemaHelper(
+							getApplicationContext());
+			HashMap<String, String> storedValues = schemaHelper
+							.getQuestion(dbId);
+			editTextQuestion.setText(storedValues.get(QuestionTable.QUESTION));
+			editTextQuestionDescription.setText(storedValues
+							.get(QuestionTable.QUESTION_DESCRIPTION));
+			editTextQuestionTitle.setText(storedValues
+							.get(QuestionTable.QUESTION_TITLE));
+
+			Editor edit = sharedPreferences.edit();
+			String questionType = storedValues.get(QuestionTable.QUESTION_TYPE);
+			if (questionType.equals(AddNewQuestion.QUESTION_TYPE_NONE_SELECTED)) {
+				edit.putString(PREF_SELECTED_QUESTION_TYPE,
+								QUESTION_TYPE_NONE_SELECTED);
+			} else if (questionType.equals(AddNewQuestion.QUESTION_TYPE_OPEN)) {
+				edit.putString(PREF_SELECTED_QUESTION_TYPE, QUESTION_TYPE_OPEN);
+			} else if (questionType.equals(AddNewQuestion.QUESTION_TYPE_YES_NO)) {
+				edit.putString(PREF_SELECTED_QUESTION_TYPE,
+								QUESTION_TYPE_YES_NO);
+			} else if (questionType.equals(AddNewQuestion.QUESTION_TYPE_RANGE)) {
+				String[] splitted = storedValues.get(
+								QuestionTable.ANSWER_OPTIONS).split("-");
+				editTextMinimumValueTemp = splitted[0];
+				editTextMaximumValueTemp = splitted[1];
+				edit.putString(PREF_SELECTED_QUESTION_TYPE, QUESTION_TYPE_RANGE);
+			}
+			edit.commit();
+
+		}
 		final Spinner spinnerQuestion = (Spinner) findViewById(R.id.activity_add_new_question_spinner_question_type);
 
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -83,73 +195,98 @@ public class AddNewQuestion extends Activity {
 						android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-		// Get position of default option in the spinner.
-		String defaultQuestionOption = getResources()
-						.getString(R.string.activity_add_new_question_spinner_option_default_option);
+		String selectedQuestionType = sharedPreferences.getString(
+						PREF_SELECTED_QUESTION_TYPE, "none");
+		String selectedQuestionOption = new String();
+
+		if (selectedQuestionType.equals("none")
+						|| selectedQuestionType
+										.equals(QUESTION_TYPE_NONE_SELECTED)) {
+			selectedQuestionOption = getResources()
+							.getString(R.string.activity_add_new_question_spinner_option_default_option);
+		} else if (selectedQuestionType.equals(QUESTION_TYPE_RANGE)) {
+			selectedQuestionOption = getResources()
+							.getString(R.string.activity_add_new_question_spinner_option_scale);
+		} else if (selectedQuestionType.equals(QUESTION_TYPE_OPEN)) {
+			selectedQuestionOption = getResources()
+							.getString(R.string.activity_add_new_question_spinner_option_open);
+		} else if (selectedQuestionType.equals(QUESTION_TYPE_YES_NO)) {
+			selectedQuestionOption = getResources()
+							.getString(R.string.activity_add_new_question_spinner_option_yes_no);
+		}
+		// Get position of the selected option
+
 		int tempPosition = 0;
 		for (int i = 0; i < adapter.getCount(); i++) {
 			String item = adapter.getItem(i).toString();
-			if (item.equals(defaultQuestionOption)) {
+			if (item.equals(selectedQuestionOption)) {
 				tempPosition = i;
 				break;
 			}
 		}
+
 		final int defaultSpinnerOptionPosition = tempPosition;
 
 		spinnerQuestion.setAdapter(adapter);
+		spinnerQuestion.setSelection(defaultSpinnerOptionPosition);
+
+		
 		spinnerQuestion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 							int pos, long id) {
-				String selectedItem = (String) parent.getItemAtPosition(pos);
-				Editor sharedPreferencesEditor = sharedPreferences.edit();
-				// Do nothing, but record that the Question Type is not selected yet
-				if (selectedItem.equals(AddNewQuestion.this
-								.getResources()
-								.getString(R.string.activity_add_new_question_spinner_option_default_option))) {
-					sharedPreferencesEditor.putString(
-									PREF_SELECTED_QUESTION_TYPE,
-									QUESTION_TYPE_NONE_SELECTED);
-					sharedPreferencesEditor.commit();
-					flagQuestionTypeValidation = false;
+				if (firstSelected) {
+					firstSelected = false;
+				}else{
+					String selectedItem = (String) parent.getItemAtPosition(pos);
+					Editor sharedPreferencesEditor = sharedPreferences.edit();
+					// Do nothing, but record that the Question Type is not selected yet
+					if (selectedItem.equals(AddNewQuestion.this
+									.getResources()
+									.getString(R.string.activity_add_new_question_spinner_option_default_option))) {
+						sharedPreferencesEditor.putString(
+										PREF_SELECTED_QUESTION_TYPE,
+										QUESTION_TYPE_NONE_SELECTED);
+						sharedPreferencesEditor.commit();
+						flagQuestionTypeValidation = false;
 
+					}
+					// Yes/No Question
+					else if (selectedItem
+									.equals(AddNewQuestion.this
+													.getResources()
+													.getString(R.string.activity_add_new_question_spinner_option_yes_no))) {
+						sharedPreferencesEditor.putString(
+										PREF_SELECTED_QUESTION_TYPE,
+										QUESTION_TYPE_YES_NO);
+						sharedPreferencesEditor.commit();
+						flagQuestionTypeValidation = true;
+					} else if (selectedItem
+									.equals(AddNewQuestion.this
+													.getResources()
+													.getString(R.string.activity_add_new_question_spinner_multiple_choice_answer))) {
+						// Multiple choice answer question
+						Toast.makeText(AddNewQuestion.this, "Not implemented yet",
+										Toast.LENGTH_LONG).show();
+						// Open question
+					} else if (selectedItem
+									.equals(AddNewQuestion.this
+													.getResources()
+													.getString(R.string.activity_add_new_question_spinner_option_open))) {
+						sharedPreferencesEditor.putString(
+										PREF_SELECTED_QUESTION_TYPE,
+										QUESTION_TYPE_OPEN);
+						sharedPreferencesEditor.commit();
+						flagQuestionTypeValidation = true;
+						// Scale question
+					} else if (selectedItem
+									.equals(AddNewQuestion.this
+													.getResources()
+													.getString(R.string.activity_add_new_question_spinner_option_scale))) {
+						rangeDiag();
+					}
 				}
-				// Yes/No Question
-				else if (selectedItem
-								.equals(AddNewQuestion.this
-												.getResources()
-												.getString(R.string.activity_add_new_question_spinner_option_yes_no))) {
-					sharedPreferencesEditor.putString(
-									PREF_SELECTED_QUESTION_TYPE,
-									QUESTION_TYPE_YES_NO);
-					sharedPreferencesEditor.commit();
-					flagQuestionTypeValidation = true;
-				} else if (selectedItem
-								.equals(AddNewQuestion.this
-												.getResources()
-												.getString(R.string.activity_add_new_question_spinner_multiple_choice_answer))) {
-					// Multiple choice answer question
-					Toast.makeText(AddNewQuestion.this, "Not implemented yet",
-									Toast.LENGTH_LONG).show();
-					//Open question
-				} else if (selectedItem
-								.equals(AddNewQuestion.this
-												.getResources()
-												.getString(R.string.activity_add_new_question_spinner_option_open))) {
-					sharedPreferencesEditor.putString(
-									PREF_SELECTED_QUESTION_TYPE,
-									QUESTION_TYPE_OPEN);
-					sharedPreferencesEditor.commit();
-					flagQuestionTypeValidation = true;
-					//Scale question
-				} else if (selectedItem
-								.equals(AddNewQuestion.this
-												.getResources()
-												.getString(R.string.activity_add_new_question_spinner_option_scale))) {
-					rangeDiag();
-				}
-
 			}
 
 			@Override
@@ -218,6 +355,15 @@ public class AddNewQuestion extends Activity {
 									}
 								});
 
+				if (intent.hasExtra(ADD_NEW_QUESTION_ACTIVITY_MODE)
+								&& (intent.getStringExtra(
+												ADD_NEW_QUESTION_ACTIVITY_MODE)
+												.equals(ACTIVITY_MODE_READ_ONLY) || intent
+												.getStringExtra(ADD_NEW_QUESTION_ACTIVITY_MODE)
+												.equals(ACTIVITY_MODE_UPDATE))) {
+					editTextMinimumValue.setText(editTextMinimumValueTemp);
+					editTextMaximumValue.setText(editTextMaximumValueTemp);
+				}
 				okButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -269,59 +415,6 @@ public class AddNewQuestion extends Activity {
 			}
 		});
 
-		// EditText definition and validation
-		validationTestAlphaWithSpace = new HashMap<Integer, String>();
-		validationTestAlphaWithSpace
-						.put(EditTextValidation.ALPHABETHIC_VALIDATION,
-										getResources().getString(
-														R.string.editText_validation_error_alpha_only));
-		validationTestAlphaWithSpace
-						.put(EditTextValidation.CHARACTER_VALIDATION,
-										getResources().getString(
-														R.string.editText_validation_error_char_not_allowed));
-		validationTestAlphaWithSpace
-						.put(EditTextValidation.NO_PIPE_CHAR_VALIDATION,
-										getResources().getString(
-														R.string.editText_validation_error_pipe_char_not_allowed));
-		// EditText Validation
-		editTextQuestionTitle = (EditText) AddNewQuestion.this
-						.findViewById(R.id.activity_add_new_question_editText_question_title);
-
-		editTextQuestionTitle
-						.setOnFocusChangeListener(new OnFocusChangeListener() {
-							@Override
-							public void onFocusChange(View v, boolean hasFocus) {
-								if (!hasFocus) {
-									validateEditText((EditText) v,
-													validationTestAlphaWithSpace);
-								}
-							}
-						});
-
-		editTextQuestionDescription = (EditText) AddNewQuestion.this
-						.findViewById(R.id.activity_add_new_question_editText_question_description);
-		editTextQuestionDescription
-						.setOnFocusChangeListener(new OnFocusChangeListener() {
-							@Override
-							public void onFocusChange(View v, boolean hasFocus) {
-								if (!hasFocus) {
-									validateEditText((EditText) v,
-													validationTestAlphaWithSpace);
-								}
-							}
-						});
-
-		editTextQuestion = (EditText) AddNewQuestion.this
-						.findViewById(R.id.activity_add_new_question_editText_question);
-		editTextQuestion.setOnFocusChangeListener(new OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (!hasFocus) {
-					validateEditText((EditText) v, validationTestAlphaWithSpace);
-				}
-			}
-		});
-
 		Button buttonOk = (Button) this
 						.findViewById(R.id.activity_add_new_question_button_add_new_question_ok);
 		buttonOk.setOnClickListener(new OnClickListener() {
@@ -348,7 +441,7 @@ public class AddNewQuestion extends Activity {
 									PREF_MINIMUM_RANGE_VALUE, -1))
 									+ "-"
 									+ Integer.toString(sharedPreferences
-													.getInt(PREF_MINIMUM_RANGE_VALUE,
+													.getInt(PREF_MAXIMUM_RANGE_VALUE,
 																	-1));
 					flagQuestionTypeValidation = true;
 				} else if (questionType.equals(QUESTION_TYPE_YES_NO)) {
@@ -358,7 +451,7 @@ public class AddNewQuestion extends Activity {
 									+ getResources().getString(
 													R.string.activity_add_new_question_no_answer_option);
 					flagQuestionTypeValidation = true;
-				} else if(questionType.equals(QUESTION_TYPE_OPEN)){
+				} else if (questionType.equals(QUESTION_TYPE_OPEN)) {
 					answerOptions = new String();
 					flagQuestionTypeValidation = true;
 				}
@@ -385,22 +478,45 @@ public class AddNewQuestion extends Activity {
 					String question = (editTextQuestion).getText().toString();
 					String questionDescription = (editTextQuestionDescription)
 									.getText().toString();
-					// Save to database
-					long dbResult = schemaHelper.addQuestion(questionTitle,
-									question, questionDescription,
-									questionType, answerOptions);
-					if (dbResult < 0) {
-						Toast.makeText(AddNewQuestion.this,
-										getResources().getString(
-														R.string.database_error_storing_data),
-										Toast.LENGTH_LONG).show();
-					} else {
-						Toast.makeText(AddNewQuestion.this,
-										getResources().getString(
-														R.string.database_success_storing_data),
-										Toast.LENGTH_LONG).show();
-						// TODO Go to another activity because everything went OK
+
+					String intentMsg = intent
+									.getStringExtra(AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE);
+
+					// Add New Question Activity Mode: add new
+					if (intentMsg.equals(AddNewQuestion.ACTIVITY_MODE_ADD_NEW)) {
+						// Save to database
+						long dbResult = schemaHelper.addQuestion(questionTitle,
+										question, questionDescription,
+										questionType, answerOptions);
+						if (dbResult < 0) {
+							Toast.makeText(AddNewQuestion.this,
+											getResources().getString(
+															R.string.database_error_storing_data),
+											Toast.LENGTH_LONG).show();
+						} else {
+							Toast.makeText(AddNewQuestion.this,
+											getResources().getString(
+															R.string.database_success_storing_data),
+											Toast.LENGTH_LONG).show();
+						}
+					} else if (intentMsg
+									.equals(AddNewQuestion.ACTIVITY_MODE_UPDATE)) {
+						schemaHelper.updateQuestion(
+										intent.getStringExtra(AddNewQuestion.ACTIVITY_MODE_DB_ITEM_ID),
+										questionTitle, questionDescription,
+										question, questionType, answerOptions);
+
 					}
+					// Go to ShowQuestions activity
+					if (intentMsg.equals(AddNewQuestion.ACTIVITY_MODE_ADD_NEW)
+									|| intentMsg.equals(AddNewQuestion.ACTIVITY_MODE_READ_ONLY)
+									|| intentMsg.equals(AddNewQuestion.ACTIVITY_MODE_UPDATE)) {
+						Intent launchAddNewQuestion = new Intent(
+										AddNewQuestion.this,
+										ShowQuestions.class);
+						startActivity(launchAddNewQuestion);
+					}
+
 				}
 
 			}
@@ -413,7 +529,9 @@ public class AddNewQuestion extends Activity {
 			@Override
 			public void onClick(View v) {
 				resetValidationFlags();
-				// TODO Go to another activity
+				Intent intent = new Intent(AddNewQuestion.this,
+								ShowQuestions.class);
+				startActivity(intent);
 
 			}
 		});
