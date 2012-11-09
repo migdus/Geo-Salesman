@@ -64,9 +64,8 @@ public class SelectQuestion extends Activity {
 			this.openOptionsMenu();
 		}
 
-		LinearLayout relativeLayoutFloatingButtonsBar = (LinearLayout) this
-						.findViewById(R.id.listview_floating_buttons_bar);
-		relativeLayoutFloatingButtonsBar.setVisibility(View.VISIBLE);
+		//LinearLayout relativeLayoutFloatingButtonsBar = (LinearLayout) this.findViewById(R.id.listview_floating_buttons_bar);
+		//relativeLayoutFloatingButtonsBar.setVisibility(View.VISIBLE);
 		
 		//TODO Make buttons do something
 		Button buttonOk=(Button)this.findViewById(R.id.listview_button_ok);

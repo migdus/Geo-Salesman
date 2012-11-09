@@ -17,7 +17,6 @@
     <string name="database_success_storing_data">Data stored successfully.</string>
     <string name="database_success_updating_data">Data updated successfully.</string>
     <string name="database_error_updating_data">Error updating data in the database.</string>
-    
     <string name="app_name">Geo Salesman</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
@@ -66,7 +65,9 @@
     <string name="activity_add_new_question_maximum_value_hint">Maximum Value</string>
     <string name="activity_add_new_question_minimum_value_hint">Minimum Value</string>
     <!-- Yes/No answer options -->
-    <string name = "activity_add_new_question_yes_answer_option">Yes</string>
-    <string name = "activity_add_new_question_no_answer_option">No</string>
+    <string name="activity_add_new_question_yes_answer_option">Yes</string>
+    <string name="activity_add_new_question_no_answer_option">No</string>
+    <string name="title_activity_question">Question</string>
+    <string name="title_activity_crudobject">CRUDObject</string>
 
 </resources>
