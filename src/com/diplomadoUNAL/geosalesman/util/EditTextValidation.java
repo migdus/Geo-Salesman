@@ -32,7 +32,7 @@ public class EditTextValidation {
 			boolean flagMatchCase = false;
 			switch (key.intValue()) {
 			case ALPHABETHIC_VALIDATION:
-				if (!textToValidate.matches("[a-zA-Z ‡Ž’—œAƒêîò„–\\s']+"))
+				if (!textToValidate.matches("[a-zA-Z À?‡Ž’—œAƒêîò„–\\s']+"))
 					flagMatchCase = true;
 				break;
 			case NUMBER_VALIDATION:
