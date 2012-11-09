@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -63,13 +64,14 @@ public class SelectQuestion extends Activity {
 			this.openOptionsMenu();
 		}
 
-		RelativeLayout relativeLayoutFloatingButtonsBar = (RelativeLayout) this
+		LinearLayout relativeLayoutFloatingButtonsBar = (LinearLayout) this
 						.findViewById(R.id.listview_floating_buttons_bar);
 		relativeLayoutFloatingButtonsBar.setVisibility(View.VISIBLE);
 		
 		//TODO Make buttons do something
 		Button buttonOk=(Button)this.findViewById(R.id.listview_button_ok);
 		buttonOk.setEnabled(false);
+		
 		Button buttonCancel=(Button)this.findViewById(R.id.listview_button_cancel);
 		
 		TwoLineWithCheckboxAdapter adapter = new TwoLineWithCheckboxAdapter(this, R.layout.simple_list_item_2_with_checkbox, data,buttonOk);
