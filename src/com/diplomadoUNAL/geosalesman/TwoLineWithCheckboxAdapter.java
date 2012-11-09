@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class TwoLineWithCheckboxAdapter extends
@@ -21,11 +23,23 @@ public class TwoLineWithCheckboxAdapter extends
 
 	ViewHolder viewHolder;
 	List<HashMap<String, String>> objects;
+
+	Button buttonOk;
+
 	public TwoLineWithCheckboxAdapter(Context context, int textViewResourceId,
 					ArrayList<HashMap<String, String>> data) {
 		super(context, textViewResourceId, data);
 		checkBoxState = new boolean[data.size()];
-		this.objects=data;
+		this.objects = data;
+	}
+
+	// Use this!
+	public TwoLineWithCheckboxAdapter(Context context, int textViewResourceId,
+					ArrayList<HashMap<String, String>> data,
+					Button buttonOk) {
+		this(context, textViewResourceId, data);
+		this.buttonOk = buttonOk;
+
 	}
 
 	// class for caching the views in a row
@@ -56,7 +70,6 @@ public class TwoLineWithCheckboxAdapter extends
 		} else
 			viewHolder = (ViewHolder) convertView.getTag();
 
-
 		// set the data to be displayed
 		viewHolder.text1.setText(objects.get(position).get("text1").toString());
 		viewHolder.text2.setText(objects.get(position).get("text2").toString());
@@ -69,10 +82,21 @@ public class TwoLineWithCheckboxAdapter extends
 		viewHolder.checkBox.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
-				if (((CheckBox) v).isChecked())
+				if (((CheckBox) v).isChecked()) {
 					checkBoxState[position] = true;
-				else
+					buttonOk.setEnabled(true);
+				
+				} else {
 					checkBoxState[position] = false;
+					buttonOk.setEnabled(false);
+					for (int i = 0; i < checkBoxState.length; i++) {
+						if (checkBoxState[i]) {
+							buttonOk.setEnabled(true);
+							break;
+						}
+
+					}
+				}
 
 			}
 		});

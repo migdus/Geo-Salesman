@@ -7,18 +7,25 @@ import java.util.Iterator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.diplomadoUNAL.geosalesman.database.QuestionTable;
 import com.diplomadoUNAL.geosalesman.database.SchemaHelper;
 
 @SuppressLint("UseSparseArrays")
 public class SelectQuestion extends Activity {
+
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listview);
-
+		
+		
+		
 		ListView listViewShowQuestions = (ListView) this
 						.findViewById(R.id.listView_show_question_menu);
 
@@ -56,8 +63,16 @@ public class SelectQuestion extends Activity {
 			this.openOptionsMenu();
 		}
 
-
-		TwoLineWithCheckboxAdapter adapter = new TwoLineWithCheckboxAdapter(this, R.layout.simple_list_item_2_with_checkbox, data);
+		RelativeLayout relativeLayoutFloatingButtonsBar = (RelativeLayout) this
+						.findViewById(R.id.listview_floating_buttons_bar);
+		relativeLayoutFloatingButtonsBar.setVisibility(View.VISIBLE);
+		
+		//TODO Make buttons do something
+		Button buttonOk=(Button)this.findViewById(R.id.listview_button_ok);
+		buttonOk.setEnabled(false);
+		Button buttonCancel=(Button)this.findViewById(R.id.listview_button_cancel);
+		
+		TwoLineWithCheckboxAdapter adapter = new TwoLineWithCheckboxAdapter(this, R.layout.simple_list_item_2_with_checkbox, data,buttonOk);
 		listViewShowQuestions.setAdapter(adapter);
 	}
 }
