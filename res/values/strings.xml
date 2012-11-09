@@ -2,7 +2,7 @@
 
     <string name="OK">OK</string>
     <string name="cancel">Cancel</string>
-    
+    <string name="title_activity_select_questions">Select Questions</string>
 
     <!-- Validation error messages for EditText -->
     <string name="editText_validation_error_empty_field">The field cannot be empty.</string>
