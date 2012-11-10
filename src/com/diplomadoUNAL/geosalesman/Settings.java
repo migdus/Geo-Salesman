@@ -60,34 +60,37 @@ public class Settings extends Activity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 							long arg3) {
 
-				String selectedOption = (String) ((TwoLineListItem) arg1).getText1()
-								.getText();
+				String selectedOption = (String) ((TwoLineListItem) arg1)
+								.getText1().getText();
 
 				Intent intent = new Intent(Settings.this, CRUDObject.class);
-				//Setup menu items
-				intent= intent.putExtra(CRUDObject.CRUD_OBJ_ENABLED_ADD_MENU_ITEM, true)
-								.putExtra(CRUDObject.CRUD_OBJ_ENABLED_DELETE_MENU_ITEM,
-												true);
-				
-				
-				if (selectedOption.equals(getResources().getString(R.string.questions))) {
-					//Setup database elements
-					intent.putExtra(CRUDObject.CRUD_OBJ_QUERY_SOURCE, CRUDObject.QUESTIONS);
-					//start intent activity
+				// Setup menu items
+				intent = intent.putExtra(CRUDObject.ADD_MENU_ITEM_ENABLED, true)
+								.putExtra(CRUDObject.DELETE_MENU_ITEM_ENABLED,
+												true)
+								.putExtra(CRUDObject.ACTIVITY_TITLE,
+												getResources().getString(
+																R.string.activity_crud_questions_title));
+
+				if (selectedOption.equals(getResources().getString(
+								R.string.questions))) {
+					// Setup database elements
+					intent.putExtra(CRUDObject.QUERY_SOURCE,
+									CRUDObject.QUESTIONS);
+					// start intent activity
 					startActivityForResult(intent, 1);
 				} else if (selectedOption.equals(getResources().getString(
 								R.string.clients))) {
 					// TODO
-					Toast.makeText(Settings.this, selectedOption, Toast.LENGTH_LONG)
-									.show();
+					Toast.makeText(Settings.this, selectedOption,
+									Toast.LENGTH_LONG).show();
 				} else if (selectedOption.equals(getResources().getString(
 								R.string.report_templates))) {
 					// TODO
-					Toast.makeText(Settings.this, selectedOption, Toast.LENGTH_LONG)
-									.show();
+					Toast.makeText(Settings.this, selectedOption,
+									Toast.LENGTH_LONG).show();
 				}
-			
-				
+
 			}
 		});
 	}

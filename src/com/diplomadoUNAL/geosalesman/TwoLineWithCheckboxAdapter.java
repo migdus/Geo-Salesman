@@ -49,6 +49,16 @@ public class TwoLineWithCheckboxAdapter extends
 		}
 	}
 
+	public ArrayList<HashMap<String, String>> getChecked(){
+		ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String,String>>();
+		for(int i=0;i<checkBoxState.length;i++){
+			if(checkBoxState[i] == true){
+				result.add(objects.get(i));
+			}
+		}
+		return result;
+	}
+	
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 

@@ -14,6 +14,10 @@
     <string name="report_templates">Report templates</string>
     <string name="report_templates_settings_short_description">Add, remove and edit report templates</string>
 
+    <string name="activity_crud_questions_title">Questions</string>
+    <string name="activity_crud_clients_title">Clients</string>
+    <string name="activity_crud_report_templates_title">Report Templates</string>
+    
     <!-- Validation error messages for EditText -->
     <string name="editText_validation_error_empty_field">The field cannot be empty.</string>
     <string name="editText_validation_error_numbers_only">Only numbers are allowed on this field.</string>

@@ -126,6 +126,12 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		return result;
 	}
 	
+	// Wrapper method for deleting a question
+	public int deleteQuestion(String questionID){
+		SQLiteDatabase database = getWritableDatabase();
+		int result=database.delete(QuestionTable.TABLE_NAME, QuestionTable.ID+"=?", new String[]{questionID});
+		return result;
+	}
 	// Wrapper method for adding a Report Template
 	public long addReportTemplate(int questionId, String name,
 					String description) {
