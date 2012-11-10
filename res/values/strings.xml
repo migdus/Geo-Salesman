@@ -1,8 +1,18 @@
 <resources>
 
-    <string name="OK">OK</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="delete_items">Delete items</string>
+    <string name="add_item">Add item</string>
+    <string name="select_items">Select items</string>
     <string name="title_activity_select_questions">Select Questions</string>
+    
+    <string name="questions">Questions</string>
+    <string name="questions_settings_short_description">Add, remove and edit questions</string>
+    <string name="clients">Clients</string>
+    <string name="clients_settings_short_description">Add, remove and edit clients</string>
+    <string name="report_templates">Report templates</string>
+    <string name="report_templates_settings_short_description">Add, remove and edit report templates</string>
 
     <!-- Validation error messages for EditText -->
     <string name="editText_validation_error_empty_field">The field cannot be empty.</string>

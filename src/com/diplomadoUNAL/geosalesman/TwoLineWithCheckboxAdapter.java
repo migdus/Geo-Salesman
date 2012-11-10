@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class TwoLineWithCheckboxAdapter extends
@@ -24,28 +23,30 @@ public class TwoLineWithCheckboxAdapter extends
 	ViewHolder viewHolder;
 	List<HashMap<String, String>> objects;
 
-	Button buttonOk;
+	Button positiveButton;
 
-	public TwoLineWithCheckboxAdapter(Context context, int textViewResourceId,
-					ArrayList<HashMap<String, String>> data) {
-		super(context, textViewResourceId, data);
-		checkBoxState = new boolean[data.size()];
-		this.objects = data;
-	}
+	ArrayList<CheckBox> allCheckBoxes;
 
-	// Use this!
 	public TwoLineWithCheckboxAdapter(Context context, int textViewResourceId,
 					ArrayList<HashMap<String, String>> data,
-					Button buttonOk) {
-		this(context, textViewResourceId, data);
-		this.buttonOk = buttonOk;
-
+					final Button positiveButton) {
+		super(context, textViewResourceId, data);
+		this.positiveButton = positiveButton;
+		checkBoxState = new boolean[data.size()];
+		this.objects = data;
+		allCheckBoxes=new ArrayList<CheckBox>();
 	}
 
 	// class for caching the views in a row
 	private class ViewHolder {
 		TextView text1, text2;
 		CheckBox checkBox;
+	}
+
+	public void changeCheckboxesState(int visibility) {
+		for (int i = 0; i < allCheckBoxes.size(); i++) {
+			allCheckBoxes.get(i).setVisibility(visibility);
+		}
 	}
 
 	@Override
@@ -71,9 +72,12 @@ public class TwoLineWithCheckboxAdapter extends
 			viewHolder = (ViewHolder) convertView.getTag();
 
 		// set the data to be displayed
+		
 		viewHolder.text1.setText(objects.get(position).get("text1").toString());
 		viewHolder.text2.setText(objects.get(position).get("text2").toString());
 		viewHolder.checkBox.setChecked(checkBoxState[position]);
+		viewHolder.checkBox.setVisibility(View.GONE);
+		allCheckBoxes.add(viewHolder.checkBox);
 
 		// for managing the state of the boolean
 		// array according to the state of the
@@ -84,14 +88,14 @@ public class TwoLineWithCheckboxAdapter extends
 			public void onClick(View v) {
 				if (((CheckBox) v).isChecked()) {
 					checkBoxState[position] = true;
-					buttonOk.setEnabled(true);
-				
+					positiveButton.setEnabled(true);
+
 				} else {
 					checkBoxState[position] = false;
-					buttonOk.setEnabled(false);
+					positiveButton.setEnabled(false);
 					for (int i = 0; i < checkBoxState.length; i++) {
 						if (checkBoxState[i]) {
-							buttonOk.setEnabled(true);
+							positiveButton.setEnabled(true);
 							break;
 						}
 
