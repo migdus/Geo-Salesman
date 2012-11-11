@@ -128,7 +128,7 @@ public class CRUDObject extends Activity {
 									AddNewQuestion.class);
 					launchAddNewQuestion
 									.putExtra(AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
-													AddNewQuestion.ACTIVITY_MODE_UPDATE)
+													AddNewQuestion.ACTIVITY_MODE_UPDATE).putExtra(ACTIVITY_TITLE, R.string.activity_add_new_question_update_title)
 									.putExtra(AddNewQuestion.ACTIVITY_MODE_DB_ITEM_ID,
 													twoLineWithCheckboxAdapter
 																	.getDbId(text1,
@@ -175,7 +175,7 @@ public class CRUDObject extends Activity {
 			// Prepare an intent in order to call the add question activity
 			Intent intent = new Intent(CRUDObject.this, AddNewQuestion.class);
 			intent.putExtra(AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
-							AddNewQuestion.ACTIVITY_MODE_ADD_NEW);
+							AddNewQuestion.ACTIVITY_MODE_ADD_NEW).putExtra(ACTIVITY_TITLE, R.string.activity_add_new_question_add_new_title_activity);
 			startActivityForResult(intent, 1);
 			return true;
 		case R.id.activity_crudobject_delete:

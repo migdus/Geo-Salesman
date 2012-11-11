@@ -6,18 +6,16 @@
     <string name="add_item">Add item</string>
     <string name="select_items">Select items</string>
     <string name="title_activity_select_questions">Select Questions</string>
-    
     <string name="questions">Questions</string>
     <string name="questions_settings_short_description">Add, remove and edit questions</string>
     <string name="clients">Clients</string>
     <string name="clients_settings_short_description">Add, remove and edit clients</string>
     <string name="report_templates">Report templates</string>
     <string name="report_templates_settings_short_description">Add, remove and edit report templates</string>
-
     <string name="activity_crud_questions_title">Questions</string>
     <string name="activity_crud_clients_title">Clients</string>
     <string name="activity_crud_report_templates_title">Report Templates</string>
-    
+
     <!-- Validation error messages for EditText -->
     <string name="editText_validation_error_empty_field">The field cannot be empty.</string>
     <string name="editText_validation_error_numbers_only">Only numbers are allowed on this field.</string>
@@ -32,6 +30,7 @@
     <string name="database_success_updating_data">Data updated successfully</string>
     <string name="database_error_updating_data">Error updating data in the database</string>
     <string name="database_success_deleting_data">Data deleted successfully</string>
+    
     <string name="app_name">Geo Salesman</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
@@ -54,7 +53,9 @@
     <string name="title_activity_add_new_question">AddNewQuestion</string>
 
     <!-- Add new Question activity -->
-
+    <string name="activity_add_new_question_update_title">Update question</string>
+    <string name="activity_add_new_question_add_new_title_activity">Add new question</string>
+    
     <string name="activity_add_new_question_spinner_question_type_prompt">Question type</string>
     <string name="activity_add_new_question_spinner_option_default_option">Question type</string>
     <string name="activity_add_new_question_spinner_option_yes_no">Yes/No</string>
