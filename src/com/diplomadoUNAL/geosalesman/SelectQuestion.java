@@ -68,12 +68,12 @@ public class SelectQuestion extends Activity {
 		//relativeLayoutFloatingButtonsBar.setVisibility(View.VISIBLE);
 		
 		//TODO Make buttons do something
-		Button buttonOk=(Button)this.findViewById(R.id.listview_button_ok);
-		buttonOk.setEnabled(false);
+		//Button buttonOk=(Button)this.findViewById(R.id.listview_button_ok);
+		//buttonOk.setEnabled(false);
 		
-		Button buttonCancel=(Button)this.findViewById(R.id.listview_button_cancel);
+		//Button buttonCancel=(Button)this.findViewById(R.id.listview_button_cancel);
 		
-		TwoLineWithCheckboxAdapter adapter = new TwoLineWithCheckboxAdapter(this, R.layout.simple_list_item_2_with_checkbox, data,buttonOk);
-		listViewShowQuestions.setAdapter(adapter);
+		//TwoLineWithCheckboxAdapter adapter = new TwoLineWithCheckboxAdapter(this, R.layout.simple_list_item_2_with_checkbox, data,buttonOk);
+		//listViewShowQuestions.setAdapter(adapter);
 	}
 }

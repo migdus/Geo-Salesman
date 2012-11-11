@@ -3,12 +3,4 @@
         android:title="@string/add_item"
         android:orderInCategory="100"
         android:showAsAction="never" />
-    <item android:id="@+id/activity_crudobject_select"
-        android:title="@string/select_items"
-        android:orderInCategory="200"
-        android:showAsAction="never" />
-    <item android:id="@+id/activity_crudobject_delete"
-        android:title="@string/delete_items"
-        android:orderInCategory="300"
-        android:showAsAction="never" />
 </menu>

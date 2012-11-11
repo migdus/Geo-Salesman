@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class TwoLineWithCheckboxAdapter extends
@@ -23,15 +23,15 @@ public class TwoLineWithCheckboxAdapter extends
 	ViewHolder viewHolder;
 	List<HashMap<String, String>> objects;
 
-	Button positiveButton;
+	LinearLayout floatingBar;
 
 	ArrayList<CheckBox> allCheckBoxes;
 
 	public TwoLineWithCheckboxAdapter(Context context, int textViewResourceId,
 					ArrayList<HashMap<String, String>> data,
-					final Button positiveButton) {
+					LinearLayout floatingBar) {
 		super(context, textViewResourceId, data);
-		this.positiveButton = positiveButton;
+		this.floatingBar = floatingBar;
 		checkBoxState = new boolean[data.size()];
 		this.objects = data;
 		allCheckBoxes = new ArrayList<CheckBox>();
@@ -58,16 +58,18 @@ public class TwoLineWithCheckboxAdapter extends
 		}
 		return result;
 	}
-/**
- * 
- * @param text1Value
- * @param text2Value
- * @return <code>null</code> if not found
- */
+
+	/**
+	 * 
+	 * @param text1Value
+	 * @param text2Value
+	 * @return <code>null</code> if not found
+	 */
 	public String getDbId(String text1Value, String text2Value) {
 		for (int i = 0; i < objects.size(); i++) {
 			HashMap<String, String> element = objects.get(i);
-			if(element.get("text1").equals(text1Value) && element.get("text2").equals(text2Value)){
+			if (element.get("text1").equals(text1Value)
+							&& element.get("text2").equals(text2Value)) {
 				return element.get("dbId");
 			}
 		}
@@ -101,7 +103,6 @@ public class TwoLineWithCheckboxAdapter extends
 		viewHolder.text1.setText(objects.get(position).get("text1").toString());
 		viewHolder.text2.setText(objects.get(position).get("text2").toString());
 		viewHolder.checkBox.setChecked(checkBoxState[position]);
-		viewHolder.checkBox.setVisibility(View.GONE);
 		allCheckBoxes.add(viewHolder.checkBox);
 
 		// for managing the state of the boolean
@@ -113,14 +114,14 @@ public class TwoLineWithCheckboxAdapter extends
 			public void onClick(View v) {
 				if (((CheckBox) v).isChecked()) {
 					checkBoxState[position] = true;
-					positiveButton.setEnabled(true);
+					floatingBar.setVisibility(View.VISIBLE);
 
 				} else {
 					checkBoxState[position] = false;
-					positiveButton.setEnabled(false);
+					floatingBar.setVisibility(View.GONE);
 					for (int i = 0; i < checkBoxState.length; i++) {
 						if (checkBoxState[i]) {
-							positiveButton.setEnabled(true);
+							floatingBar.setVisibility(View.VISIBLE);
 							break;
 						}
 

@@ -65,18 +65,23 @@ public class Settings extends Activity {
 
 				Intent intent = new Intent(Settings.this, CRUDObject.class);
 				// Setup menu items
-				intent = intent.putExtra(CRUDObject.ADD_MENU_ITEM_ENABLED, true)
-								.putExtra(CRUDObject.DELETE_MENU_ITEM_ENABLED,
-												true)
-								.putExtra(CRUDObject.ACTIVITY_TITLE,
-												getResources().getString(
-																R.string.activity_crud_questions_title));
 
 				if (selectedOption.equals(getResources().getString(
 								R.string.questions))) {
 					// Setup database elements
-					intent.putExtra(CRUDObject.QUERY_SOURCE,
-									CRUDObject.QUESTIONS);
+					intent = intent.putExtra(CRUDObject.QUERY_SOURCE,
+									CRUDObject.QUESTIONS)
+									.putExtra(CRUDObject.ADD_MENU_ITEM_ENABLED,
+													true)
+									.putExtra(CRUDObject.SELECT_BUTTON_ENABLED,
+													false)
+									.putExtra(CRUDObject.DELETE_BUTTON_ENABLED,
+													true)
+									.putExtra(CRUDObject.CANCEL_BUTTON_ENABLED,
+													true)
+									.putExtra(CRUDObject.ACTIVITY_TITLE,
+													getResources().getString(
+																	R.string.activity_crud_questions_title));
 					// start intent activity
 					startActivityForResult(intent, 1);
 				} else if (selectedOption.equals(getResources().getString(

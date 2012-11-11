@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,22 +23,27 @@ import com.diplomadoUNAL.geosalesman.database.QuestionTable;
 import com.diplomadoUNAL.geosalesman.database.SchemaHelper;
 
 public class CRUDObject extends Activity {
-	Button positiveButton;
-	Button negativeButton;
+	Button selectButton;
+	Button deleteButton;
+	Button cancelButton;
 	TwoLineWithCheckboxAdapter twoLineWithCheckboxAdapter;
 
 	public final static String QUERY_SOURCE = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_QUERY_TYPE";
 	public final static String QUESTIONS = "QUESTIONS"; // get question titles and questions
+	public final static String CLIENTS = "CLIENTS";
+	public final static String REPORT_TEMPLATES = "REPORT_TEMPLATES";
 
-	public final static String ADD_MENU_ITEM_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_ENABLED_ADD_MENU_ITEM";
-	public final static String DELETE_MENU_ITEM_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_ENABLED_DELETE_MENU_ITEM";
-	public final static String SELECT_MENU_ITEM_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_ENABLED_SELECT_MENU_ITEM";
+	public final static String ADD_MENU_ITEM_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_ADD_MENU_ITEM_ENABLED";
+	public final static String DELETE_BUTTON_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_DELETE_BUTTON_ENABLED";
+	public final static String SELECT_BUTTON_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_SELECT_BUTTON_ENABLED";
+	public final static String CANCEL_BUTTON_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_CANCEL_BUTTON_ENABLED";
 
 	public final static String ACTIVITY_TITLE = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_ACTIVITY_TITLE";
 
 	Intent receivedIntent;
 	SchemaHelper schemaHelper;
 	ListView listViewItems;
+	LinearLayout floatingBar;
 
 	ArrayList<HashMap<String, String>> data;
 
@@ -46,8 +52,59 @@ public class CRUDObject extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_crudobject);
 
-		positiveButton = ((Button) this.findViewById(R.id.crud_button_positive));
-		negativeButton = ((Button) this.findViewById(R.id.crud_button_cancel));
+		receivedIntent = getIntent();
+
+		floatingBar = ((LinearLayout) this
+						.findViewById(R.id.floating_buttons_bar));
+
+		selectButton = ((Button) this.findViewById(R.id.select_button));
+		selectButton.setText(R.string.select);
+		if (receivedIntent.getBooleanExtra(SELECT_BUTTON_ENABLED, true))
+			selectButton.setVisibility(View.VISIBLE);
+
+		deleteButton = ((Button) this.findViewById(R.id.delete_button));
+		deleteButton.setText(R.string.delete);
+		if (receivedIntent.getBooleanExtra(DELETE_BUTTON_ENABLED, true))
+			deleteButton.setVisibility(View.VISIBLE);
+		deleteButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				// Delete the checked items
+				ArrayList<HashMap<String, String>> checked = twoLineWithCheckboxAdapter
+								.getChecked();
+
+				for (int i = 0; i < checked.size(); i++) {
+					String dbId = checked.get(i).get("dbId");
+					int result = 0;
+					if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+									QUESTIONS)) {
+						result = schemaHelper.deleteQuestion(dbId);
+					}
+
+					if (result > 0) {
+						Toast.makeText(CRUDObject.this,
+										R.string.database_success_deleting_data,
+										Toast.LENGTH_LONG).show();
+					}
+
+				}
+				// Refresh the listview
+				floatingBar.setVisibility(View.GONE);
+				refreshListView();
+			}
+		});
+
+		cancelButton = ((Button) this.findViewById(R.id.cancel_button));
+		cancelButton.setText(R.string.cancel);
+		if (receivedIntent.getBooleanExtra(CANCEL_BUTTON_ENABLED, true))
+			cancelButton.setVisibility(View.VISIBLE);
+		cancelButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
 
 		listViewItems = (ListView) this
 						.findViewById(R.id.listView_show_question_menu);
@@ -62,6 +119,7 @@ public class CRUDObject extends Activity {
 		super.onStart();
 
 		setTitle(receivedIntent.getStringExtra(ACTIVITY_TITLE));
+		floatingBar.setVisibility(View.GONE);
 		refreshListView();
 
 	}
@@ -107,7 +165,7 @@ public class CRUDObject extends Activity {
 
 		twoLineWithCheckboxAdapter = new TwoLineWithCheckboxAdapter(this,
 						R.layout.simple_list_item_2_with_checkbox, data,
-						positiveButton);
+						floatingBar);
 		listViewItems.setAdapter(twoLineWithCheckboxAdapter);
 		twoLineWithCheckboxAdapter.changeCheckboxesState(View.GONE);
 		listViewItems.setOnItemClickListener(new OnItemClickListener() {
@@ -128,7 +186,9 @@ public class CRUDObject extends Activity {
 									AddNewQuestion.class);
 					launchAddNewQuestion
 									.putExtra(AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
-													AddNewQuestion.ACTIVITY_MODE_UPDATE).putExtra(ACTIVITY_TITLE, R.string.activity_add_new_question_update_title)
+													AddNewQuestion.ACTIVITY_MODE_UPDATE)
+									.putExtra(ACTIVITY_TITLE,
+													R.string.activity_add_new_question_update_title)
 									.putExtra(AddNewQuestion.ACTIVITY_MODE_DB_ITEM_ID,
 													twoLineWithCheckboxAdapter
 																	.getDbId(text1,
@@ -156,14 +216,6 @@ public class CRUDObject extends Activity {
 			menu.add(0, R.id.activity_crudobject_create, 0, R.string.add_item)
 							.setEnabled(true);
 		}
-		if (receivedIntent.getBooleanExtra(SELECT_MENU_ITEM_ENABLED, false))
-			menu.add(0, R.id.activity_crudobject_select, 3,
-							R.string.select_items).setEnabled(true);
-		if (receivedIntent.getBooleanExtra(DELETE_MENU_ITEM_ENABLED, false)) {
-			menu.add(0, R.id.activity_crudobject_delete, 3,
-							R.string.delete_items).setEnabled(true);
-		}
-
 		return true;
 	}
 
@@ -175,52 +227,10 @@ public class CRUDObject extends Activity {
 			// Prepare an intent in order to call the add question activity
 			Intent intent = new Intent(CRUDObject.this, AddNewQuestion.class);
 			intent.putExtra(AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
-							AddNewQuestion.ACTIVITY_MODE_ADD_NEW).putExtra(ACTIVITY_TITLE, R.string.activity_add_new_question_add_new_title_activity);
+							AddNewQuestion.ACTIVITY_MODE_ADD_NEW)
+							.putExtra(ACTIVITY_TITLE,
+											R.string.activity_add_new_question_add_new_title_activity);
 			startActivityForResult(intent, 1);
-			return true;
-		case R.id.activity_crudobject_delete:
-			// set button text
-			positiveButton.setText(R.string.delete_items);
-			//disable button
-			positiveButton.setEnabled(false);
-			// set button action when clicked
-			positiveButton.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// Delete the checked items
-					ArrayList<HashMap<String, String>> checked = twoLineWithCheckboxAdapter
-									.getChecked();
-
-					for (int i = 0; i < checked.size(); i++) {
-						String dbId = checked.get(i).get("dbId");
-						int result = 0;
-						if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
-										QUESTIONS)) {
-							result = schemaHelper.deleteQuestion(dbId);
-						}
-
-						if (result > 0) {
-							Toast.makeText(CRUDObject.this,
-											R.string.database_success_deleting_data,
-											Toast.LENGTH_LONG).show();
-						}
-
-					}
-					// Refresh the listview
-					refreshListView();
-				}
-			});
-			// show checkboxes
-			twoLineWithCheckboxAdapter.changeCheckboxesState(View.VISIBLE);
-			return true;
-
-		case R.id.activity_crudobject_select:
-			// set button text
-			positiveButton.setText(R.string.select_items);
-			// TODO set action to perform when the button is clicked
-			// show checkboxes
-			twoLineWithCheckboxAdapter.changeCheckboxesState(View.VISIBLE);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

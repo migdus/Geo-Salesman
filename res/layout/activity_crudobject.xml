@@ -10,27 +10,37 @@
     </ListView>
 
     <LinearLayout
-        android:id="@+id/listview_floating_buttons_bar"
+        android:id="@+id/floating_buttons_bar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/white"
         android:orientation="horizontal"
-        android:visibility="visible" >
+        android:visibility="gone" >
 
         <Button
-            android:id="@+id/crud_button_positive"
+            android:id="@+id/select_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/ok" />
+            android:text="@string/select"
+            android:visibility="gone" />
 
         <Button
-            android:id="@+id/crud_button_cancel"
+            android:id="@+id/delete_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/cancel" />
+            android:text="@string/delete"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:visibility="gone" />
     </LinearLayout>
 
 </FrameLayout>
