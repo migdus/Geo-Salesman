@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.diplomadoUNAL.geosalesman.database.QuestionTable;
 import com.diplomadoUNAL.geosalesman.database.SchemaHelper;
@@ -36,7 +38,7 @@ public class CRUDObject extends Activity {
 	Intent receivedIntent;
 	SchemaHelper schemaHelper;
 	ListView listViewItems;
-	
+
 	ArrayList<HashMap<String, String>> data;
 
 	@Override
@@ -81,7 +83,6 @@ public class CRUDObject extends Activity {
 
 		data = new ArrayList<HashMap<String, String>>();
 
-		int listViewIndex = 0;
 		if (queryResults.size() > 0) {
 			Iterator<HashMap<String, String>> iterQueryResults = queryResults
 							.iterator();
@@ -92,7 +93,6 @@ public class CRUDObject extends Activity {
 				datum.put("text2", row.get(row2));
 				datum.put("dbId", row.get(rowId));
 				data.add(datum);
-				listViewIndex++;
 			}
 		} else {
 			HashMap<String, String> datum = new HashMap<String, String>(2);
@@ -115,19 +115,12 @@ public class CRUDObject extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-
-				//Search for database Id of the selected Item
-				((ListView)view).getItemAtPosition(position).toString();
-				
-				for (@SuppressWarnings("rawtypes")
-				Iterator dataIterator = data.iterator(); dataIterator
-								.hasNext();) {
-					@SuppressWarnings("unchecked")
-					HashMap<String, String> hashMap = (HashMap<String, String>) dataIterator
-									.next();
-					
-					
-				}
+				String text1 = ((TextView) view
+								.findViewById(R.id.simple_list_item_2_with_checkbox_text1))
+								.getText().toString();
+				String text2 = ((TextView) view
+								.findViewById(R.id.simple_list_item_2_with_checkbox_text2))
+								.getText().toString();
 				if (receivedIntent.hasExtra(QUERY_SOURCE)
 								&& receivedIntent.getStringExtra(QUERY_SOURCE)
 												.equals(QUESTIONS)) {
@@ -137,8 +130,9 @@ public class CRUDObject extends Activity {
 									.putExtra(AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
 													AddNewQuestion.ACTIVITY_MODE_UPDATE)
 									.putExtra(AddNewQuestion.ACTIVITY_MODE_DB_ITEM_ID,
-													dbIdListViewRelationship
-																	.get((int) id));
+													twoLineWithCheckboxAdapter
+																	.getDbId(text1,
+																					text2));
 					startActivityForResult(launchAddNewQuestion, 1);
 				} else {
 					// TODO Implement for other data sources: clients, etc...
@@ -187,6 +181,8 @@ public class CRUDObject extends Activity {
 		case R.id.activity_crudobject_delete:
 			// set button text
 			positiveButton.setText(R.string.delete_items);
+			//disable button
+			positiveButton.setEnabled(false);
 			// set button action when clicked
 			positiveButton.setOnClickListener(new OnClickListener() {
 
@@ -204,13 +200,15 @@ public class CRUDObject extends Activity {
 							result = schemaHelper.deleteQuestion(dbId);
 						}
 
-						if(result>0){
-							
+						if (result > 0) {
+							Toast.makeText(CRUDObject.this,
+											R.string.database_success_deleting_data,
+											Toast.LENGTH_LONG).show();
 						}
-						
+
 					}
 					// Refresh the listview
-					// refreshListView();
+					refreshListView();
 				}
 			});
 			// show checkboxes

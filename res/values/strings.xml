@@ -27,10 +27,11 @@
     <string name="editText_validation_error_in_one_or_more">At least one field has validation errors. Cannot continue.</string>
 
     <!-- Database related messages -->
-    <string name="database_error_storing_data">Error storing data in the database.</string>
-    <string name="database_success_storing_data">Data stored successfully.</string>
-    <string name="database_success_updating_data">Data updated successfully.</string>
-    <string name="database_error_updating_data">Error updating data in the database.</string>
+    <string name="database_error_storing_data">Error storing data in the database</string>
+    <string name="database_success_storing_data">Data stored successfully</string>
+    <string name="database_success_updating_data">Data updated successfully</string>
+    <string name="database_error_updating_data">Error updating data in the database</string>
+    <string name="database_success_deleting_data">Data deleted successfully</string>
     <string name="app_name">Geo Salesman</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>

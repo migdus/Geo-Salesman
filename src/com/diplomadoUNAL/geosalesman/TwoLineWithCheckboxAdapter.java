@@ -34,7 +34,7 @@ public class TwoLineWithCheckboxAdapter extends
 		this.positiveButton = positiveButton;
 		checkBoxState = new boolean[data.size()];
 		this.objects = data;
-		allCheckBoxes=new ArrayList<CheckBox>();
+		allCheckBoxes = new ArrayList<CheckBox>();
 	}
 
 	// class for caching the views in a row
@@ -49,16 +49,31 @@ public class TwoLineWithCheckboxAdapter extends
 		}
 	}
 
-	public ArrayList<HashMap<String, String>> getChecked(){
-		ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String,String>>();
-		for(int i=0;i<checkBoxState.length;i++){
-			if(checkBoxState[i] == true){
+	public ArrayList<HashMap<String, String>> getChecked() {
+		ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
+		for (int i = 0; i < checkBoxState.length; i++) {
+			if (checkBoxState[i] == true) {
 				result.add(objects.get(i));
 			}
 		}
 		return result;
 	}
-	
+/**
+ * 
+ * @param text1Value
+ * @param text2Value
+ * @return <code>null</code> if not found
+ */
+	public String getDbId(String text1Value, String text2Value) {
+		for (int i = 0; i < objects.size(); i++) {
+			HashMap<String, String> element = objects.get(i);
+			if(element.get("text1").equals(text1Value) && element.get("text2").equals(text2Value)){
+				return element.get("dbId");
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 
@@ -82,7 +97,7 @@ public class TwoLineWithCheckboxAdapter extends
 			viewHolder = (ViewHolder) convertView.getTag();
 
 		// set the data to be displayed
-		
+
 		viewHolder.text1.setText(objects.get(position).get("text1").toString());
 		viewHolder.text2.setText(objects.get(position).get("text2").toString());
 		viewHolder.checkBox.setChecked(checkBoxState[position]);
