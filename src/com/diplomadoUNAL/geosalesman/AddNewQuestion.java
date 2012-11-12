@@ -101,43 +101,26 @@ public class AddNewQuestion extends Activity {
 										getResources().getString(
 														R.string.editText_validation_error_pipe_char_not_allowed));
 		// EditText Validation
-		editTextQuestionTitle = (EditText) AddNewQuestion.this
-						.findViewById(R.id.activity_add_new_question_editText_question_title);
-
-		editTextQuestionTitle
-						.setOnFocusChangeListener(new OnFocusChangeListener() {
-							@Override
-							public void onFocusChange(View v, boolean hasFocus) {
-								if (!hasFocus) {
-									validateEditText((EditText) v,
-													validationTestAlphaWithSpace);
-								}
-							}
-						});
-
-		editTextQuestionDescription = (EditText) AddNewQuestion.this
-						.findViewById(R.id.activity_add_new_question_editText_question_description);
-		editTextQuestionDescription
-						.setOnFocusChangeListener(new OnFocusChangeListener() {
-							@Override
-							public void onFocusChange(View v, boolean hasFocus) {
-								if (!hasFocus) {
-									validateEditText((EditText) v,
-													validationTestAlphaWithSpace);
-								}
-							}
-						});
-
-		editTextQuestion = (EditText) AddNewQuestion.this
-						.findViewById(R.id.activity_add_new_question_editText_question);
-		editTextQuestion.setOnFocusChangeListener(new OnFocusChangeListener() {
+		OnFocusChangeListener onFocusChangeListenerAlphaWithSpaceValidation = new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
-					validateEditText((EditText) v, validationTestAlphaWithSpace);
+					validateEditText((EditText) v,
+									validationTestAlphaWithSpace);
 				}
 			}
-		});
+		};
+		editTextQuestionTitle = (EditText) AddNewQuestion.this
+						.findViewById(R.id.activity_add_new_question_editText_question_title);
+		editTextQuestionTitle
+						.setOnFocusChangeListener(onFocusChangeListenerAlphaWithSpaceValidation);
+		editTextQuestionDescription = (EditText) AddNewQuestion.this
+						.findViewById(R.id.activity_add_new_question_editText_question_description);
+		editTextQuestionDescription
+						.setOnFocusChangeListener(onFocusChangeListenerAlphaWithSpaceValidation);
+		editTextQuestion = (EditText) AddNewQuestion.this
+						.findViewById(R.id.activity_add_new_question_editText_question);
+		editTextQuestion.setOnFocusChangeListener(onFocusChangeListenerAlphaWithSpaceValidation);
 	}
 
 	@SuppressLint("UseSparseArrays")
@@ -326,35 +309,29 @@ public class AddNewQuestion extends Activity {
 												getResources().getString(
 																R.string.editText_validation_error_pipe_char_not_allowed));
 
+				OnFocusChangeListener onFocusChangeListenerNumberValidation= new OnFocusChangeListener() {
+					@Override
+					public void onFocusChange(View v,
+									boolean hasFocus) {
+						if (!hasFocus) {
+							validateEditText((EditText) v,
+											validationTestNumbers);
+						}
+					}
+				};
+				
+				
 				// Edit text objects
 				editTextMinimumValue = (EditText) rangeDialog
 								.findViewById(R.id.activity_add_new_question_editText_minimum_value);
 
 				editTextMinimumValue
-								.setOnFocusChangeListener(new OnFocusChangeListener() {
-									@Override
-									public void onFocusChange(View v,
-													boolean hasFocus) {
-										if (!hasFocus) {
-											validateEditText((EditText) v,
-															validationTestNumbers);
-										}
-									}
-								});
+								.setOnFocusChangeListener(onFocusChangeListenerNumberValidation);
 
 				editTextMaximumValue = (EditText) rangeDialog
 								.findViewById(R.id.activity_add_new_question_editText_maximum_value);
 				editTextMaximumValue
-								.setOnFocusChangeListener(new OnFocusChangeListener() {
-									@Override
-									public void onFocusChange(View v,
-													boolean hasFocus) {
-										if (!hasFocus) {
-											validateEditText((EditText) v,
-															validationTestNumbers);
-										}
-									}
-								});
+								.setOnFocusChangeListener(onFocusChangeListenerNumberValidation);
 
 				if (intent.hasExtra(ADD_NEW_QUESTION_ACTIVITY_MODE)
 								&& (intent.getStringExtra(
