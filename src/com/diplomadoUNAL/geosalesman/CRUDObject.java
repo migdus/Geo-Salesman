@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.diplomadoUNAL.geosalesman.database.ClientTable;
 import com.diplomadoUNAL.geosalesman.database.QuestionTable;
 import com.diplomadoUNAL.geosalesman.database.SchemaHelper;
 
@@ -33,6 +34,7 @@ public class CRUDObject extends Activity {
 	public final static String CLIENTS = "CLIENTS";
 	public final static String REPORT_TEMPLATES = "REPORT_TEMPLATES";
 
+	// Menus and buttons enabled
 	public final static String ADD_MENU_ITEM_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_ADD_MENU_ITEM_ENABLED";
 	public final static String DELETE_BUTTON_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_DELETE_BUTTON_ENABLED";
 	public final static String SELECT_BUTTON_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_SELECT_BUTTON_ENABLED";
@@ -66,6 +68,7 @@ public class CRUDObject extends Activity {
 		deleteButton.setText(R.string.delete);
 		if (receivedIntent.getBooleanExtra(DELETE_BUTTON_ENABLED, true))
 			deleteButton.setVisibility(View.VISIBLE);
+		// Set actions for the delete button
 		deleteButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -77,9 +80,17 @@ public class CRUDObject extends Activity {
 				for (int i = 0; i < checked.size(); i++) {
 					String dbId = checked.get(i).get("dbId");
 					int result = 0;
+					// Select table to delete from
+					// Question table
 					if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
 									QUESTIONS)) {
 						result = schemaHelper.deleteQuestion(dbId);
+
+					} else
+					// Client table
+					if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+									CLIENTS)) {
+						result = schemaHelper.deleteClient(dbId);
 					}
 
 					if (result > 0) {
@@ -106,9 +117,57 @@ public class CRUDObject extends Activity {
 			}
 		});
 
-		listViewItems = (ListView) this
-						.findViewById(R.id.listView_show_question_menu);
+		listViewItems = (ListView) this.findViewById(R.id.listView_show_items);
+		listViewItems.setItemsCanFocus(false);
+		listViewItems.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+
+				String text1 = ((TextView) view
+								.findViewById(R.id.simple_list_item_2_with_checkbox_text1))
+								.getText().toString();
+				String text2 = ((TextView) view
+								.findViewById(R.id.simple_list_item_2_with_checkbox_text2))
+								.getText().toString();
+
+				if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+								QUESTIONS)) {
+					Intent launchAddNewQuestion = new Intent(CRUDObject.this,
+									AddNewQuestion.class);
+					launchAddNewQuestion
+									.putExtra(AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
+													AddNewQuestion.ACTIVITY_MODE_UPDATE)
+									.putExtra(ACTIVITY_TITLE,
+													R.string.activity_add_new_question_update_title)
+									.putExtra(AddNewQuestion.ACTIVITY_MODE_DB_ITEM_ID,
+													twoLineWithCheckboxAdapter
+																	.getDbId(text1,
+																					text2));
+					startActivityForResult(launchAddNewQuestion, 1);
+				} else if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+								CLIENTS)) {
+					Intent launchAddNewClient = new Intent(CRUDObject.this,
+									AddNewClient.class);
+					launchAddNewClient
+									.putExtra(AddNewClient.ADD_NEW_CLIENT_ACTIVITY_MODE,
+													AddNewClient.ACTIVITY_MODE_UPDATE)
+									.putExtra(ACTIVITY_TITLE,
+													R.string.activity_add_new_client_update_title)
+									.putExtra(AddNewClient.ACTIVITY_MODE_DB_ITEM_ID,
+													twoLineWithCheckboxAdapter
+																	.getDbId(text1,
+																					text2));
+					startActivityForResult(launchAddNewClient, 1);
+				} else {
+
+					Toast.makeText(CRUDObject.this, "Some error with this",
+									Toast.LENGTH_LONG).show();
+				}
+
+			}
+		});
 		schemaHelper = new SchemaHelper(this);
 
 		receivedIntent = getIntent();
@@ -130,11 +189,19 @@ public class CRUDObject extends Activity {
 		String row2 = null;
 		String rowId = null;
 
+		// Refresh view for Question table data source
 		if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(QUESTIONS)) {
 			queryResults = schemaHelper.getQuestionsTitlesAndDescriptions();
 			row1 = QuestionTable.QUESTION_TITLE;
 			row2 = QuestionTable.QUESTION_DESCRIPTION;
 			rowId = QuestionTable.ID;
+		}
+		// Refresh view for Client table data source
+		if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(CLIENTS)) {
+			queryResults = schemaHelper.getClientNameAndContactName();
+			row1 = ClientTable.NAME;
+			row2 = ClientTable.CONTACT_NAME;
+			rowId = ClientTable.ID;
 		} else {
 			// TODO Implement for other data sources: clients, etc...
 		}
@@ -154,12 +221,23 @@ public class CRUDObject extends Activity {
 			}
 		} else {
 			HashMap<String, String> datum = new HashMap<String, String>(2);
-			datum.put("text1",
-							getResources().getString(
-											R.string.no_questions_found));
-			datum.put("text2",
-							getResources().getString(
-											R.string.tap_question_menu_to_add));
+			String text1ErrorMessage = null;
+			String text2ErrorMessage = null;
+
+			if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(QUESTIONS)) {
+				text1ErrorMessage = getResources().getString(
+								R.string.no_questions_found);
+				text2ErrorMessage = getResources().getString(
+								R.string.tap_question_menu_to_add);
+			} else if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+							CLIENTS)) {
+				text1ErrorMessage = getResources().getString(
+								R.string.no_clients_found);
+				text2ErrorMessage = getResources().getString(
+								R.string.tap_client_menu_to_add);
+			}
+			datum.put("text1", text1ErrorMessage);
+			datum.put("text2", text2ErrorMessage);
 			data.add(datum);
 		}
 
@@ -168,38 +246,7 @@ public class CRUDObject extends Activity {
 						floatingBar);
 		listViewItems.setAdapter(twoLineWithCheckboxAdapter);
 		twoLineWithCheckboxAdapter.changeCheckboxesState(View.GONE);
-		listViewItems.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-				String text1 = ((TextView) view
-								.findViewById(R.id.simple_list_item_2_with_checkbox_text1))
-								.getText().toString();
-				String text2 = ((TextView) view
-								.findViewById(R.id.simple_list_item_2_with_checkbox_text2))
-								.getText().toString();
-				if (receivedIntent.hasExtra(QUERY_SOURCE)
-								&& receivedIntent.getStringExtra(QUERY_SOURCE)
-												.equals(QUESTIONS)) {
-					Intent launchAddNewQuestion = new Intent(CRUDObject.this,
-									AddNewQuestion.class);
-					launchAddNewQuestion
-									.putExtra(AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
-													AddNewQuestion.ACTIVITY_MODE_UPDATE)
-									.putExtra(ACTIVITY_TITLE,
-													R.string.activity_add_new_question_update_title)
-									.putExtra(AddNewQuestion.ACTIVITY_MODE_DB_ITEM_ID,
-													twoLineWithCheckboxAdapter
-																	.getDbId(text1,
-																					text2));
-					startActivityForResult(launchAddNewQuestion, 1);
-				} else {
-					// TODO Implement for other data sources: clients, etc...
-				}
-
-			}
-		});
 	}
 
 	@Override
@@ -225,11 +272,22 @@ public class CRUDObject extends Activity {
 		switch (item.getItemId()) {
 		case R.id.activity_crudobject_create:
 			// Prepare an intent in order to call the add question activity
-			Intent intent = new Intent(CRUDObject.this, AddNewQuestion.class);
-			intent.putExtra(AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
-							AddNewQuestion.ACTIVITY_MODE_ADD_NEW)
-							.putExtra(ACTIVITY_TITLE,
-											R.string.activity_add_new_question_add_new_title_activity);
+			Intent intent = null;
+			if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(QUESTIONS)) {
+				intent = new Intent(CRUDObject.this, AddNewQuestion.class);
+				intent.putExtra(AddNewQuestion.ADD_NEW_QUESTION_ACTIVITY_MODE,
+								AddNewQuestion.ACTIVITY_MODE_ADD_NEW)
+								.putExtra(ACTIVITY_TITLE,
+												R.string.activity_add_new_question_add_new_title_activity);
+			} else if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+							CLIENTS)) {
+				intent = new Intent(CRUDObject.this, AddNewClient.class);
+				intent.putExtra(AddNewClient.ADD_NEW_CLIENT_ACTIVITY_MODE,
+								AddNewClient.ACTIVITY_MODE_ADD_NEW)
+								.putExtra(ACTIVITY_TITLE,
+												R.string.activity_add_new_client_add_new_title_activity);
+
+			}
 			startActivityForResult(intent, 1);
 			return true;
 		}

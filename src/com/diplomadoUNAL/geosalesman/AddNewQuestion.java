@@ -24,6 +24,7 @@ import com.diplomadoUNAL.geosalesman.database.QuestionTable;
 import com.diplomadoUNAL.geosalesman.database.SchemaHelper;
 import com.diplomadoUNAL.geosalesman.util.EditTextValidation;
 
+@SuppressLint("UseSparseArrays")
 public class AddNewQuestion extends Activity {
 	public static final String PREFS_NAME = "AddNewQuestionSharedPrefs";
 	private SharedPreferences sharedPreferences;
@@ -105,8 +106,7 @@ public class AddNewQuestion extends Activity {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
-					validateEditText((EditText) v,
-									validationTestAlphaWithSpace);
+					validateEditText((EditText) v, validationTestAlphaWithSpace);
 				}
 			}
 		};
@@ -132,12 +132,10 @@ public class AddNewQuestion extends Activity {
 
 		int dbId = -1;
 		// Fill the form fields according with database information
-		if (intent.hasExtra(ADD_NEW_QUESTION_ACTIVITY_MODE)
-						&& (intent.getStringExtra(
-										ADD_NEW_QUESTION_ACTIVITY_MODE).equals(
-										ACTIVITY_MODE_READ_ONLY) || intent
-										.getStringExtra(ADD_NEW_QUESTION_ACTIVITY_MODE)
-										.equals(ACTIVITY_MODE_UPDATE))) {
+		if (intent.getStringExtra(ADD_NEW_QUESTION_ACTIVITY_MODE).equals(
+						ACTIVITY_MODE_READ_ONLY)
+						|| intent.getStringExtra(ADD_NEW_QUESTION_ACTIVITY_MODE)
+										.equals(ACTIVITY_MODE_UPDATE)) {
 
 			dbId = Integer.parseInt(intent
 							.getStringExtra(ACTIVITY_MODE_DB_ITEM_ID));
@@ -309,18 +307,16 @@ public class AddNewQuestion extends Activity {
 												getResources().getString(
 																R.string.editText_validation_error_pipe_char_not_allowed));
 
-				OnFocusChangeListener onFocusChangeListenerNumberValidation= new OnFocusChangeListener() {
+				OnFocusChangeListener onFocusChangeListenerNumberValidation = new OnFocusChangeListener() {
 					@Override
-					public void onFocusChange(View v,
-									boolean hasFocus) {
+					public void onFocusChange(View v, boolean hasFocus) {
 						if (!hasFocus) {
 							validateEditText((EditText) v,
 											validationTestNumbers);
 						}
 					}
 				};
-				
-				
+
 				// Edit text objects
 				editTextMinimumValue = (EditText) rangeDialog
 								.findViewById(R.id.activity_add_new_question_editText_minimum_value);
@@ -393,9 +389,9 @@ public class AddNewQuestion extends Activity {
 			}
 		});
 
-		Button buttonOk = (Button) this
+		Button okButton = (Button) this
 						.findViewById(R.id.activity_add_new_question_button_add_new_question_ok);
-		buttonOk.setOnClickListener(new OnClickListener() {
+		okButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				SchemaHelper schemaHelper = new SchemaHelper(

@@ -13,6 +13,7 @@ import android.util.Log;
 
 public class SchemaHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "geosalesman_data.sqlite";
+
 	public String getDatabaseName() {
 		return DATABASE_NAME;
 	}
@@ -92,6 +93,21 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
+	public int updateClient(String clientID, String clientName,
+					int phoneNumber, String address, String contactName) {
+
+		ContentValues cv = new ContentValues();
+		cv.put(ClientTable.ADDRESS, address);
+		cv.put(ClientTable.CONTACT_NAME, contactName);
+		cv.put(ClientTable.NAME, clientName);
+		cv.put(ClientTable.PHONE_NUMBER, phoneNumber);
+
+		SQLiteDatabase database = getWritableDatabase();
+		int result = database.update(ClientTable.TABLE_NAME, cv, ClientTable.ID
+						+ "=?", new String[] { clientID });
+		return result;
+	}
+
 	// Wrapper method for adding a question
 	public long addQuestion(String questionTitle, String question,
 					String questionDescription, String questionType,
@@ -109,29 +125,52 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
-	//Wrapper method for upgrading a question
-	
-	public int updateQuestion(String questionID,String questionTitle,String questionDescription, String question, String questionType,String answerOptions){
-		
-		ContentValues cv=new ContentValues();
+	// Wrapper method for upgrading a question
+
+	public int updateQuestion(String questionID, String questionTitle,
+					String questionDescription, String question,
+					String questionType, String answerOptions) {
+
+		ContentValues cv = new ContentValues();
 		cv.put(QuestionTable.QUESTION_TITLE, questionTitle);
 		cv.put(QuestionTable.QUESTION_DESCRIPTION, questionDescription);
 		cv.put(QuestionTable.QUESTION, question);
 		cv.put(QuestionTable.QUESTION_TYPE, questionType);
 		cv.put(QuestionTable.ANSWER_OPTIONS, answerOptions);
-		
 
 		SQLiteDatabase database = getWritableDatabase();
-		int result=database.update(QuestionTable.TABLE_NAME, cv, QuestionTable.ID+"=?", new String[]{questionID});
+		int result = database.update(QuestionTable.TABLE_NAME, cv,
+						QuestionTable.ID + "=?", new String[] { questionID });
 		return result;
 	}
-	
-	// Wrapper method for deleting a question
-	public int deleteQuestion(String questionID){
+
+	/**
+	 * Wrapper method for deleting a question
+	 * 
+	 * @param questionID
+	 * @return The number of deleted columns. Returns <code>-3</code> if can not delete a question because a dependency
+	 *         with other table.
+	 */
+	public int deleteQuestion(String questionID) {
+		// Check first if this question is not included in some report template row. If it is, then can not delete the
+		String query = SQLiteQueryBuilder.buildQueryString(false,
+						ReportTemplateTable.TABLE_NAME,
+						new String[] { ReportTemplateTable.QUESTION_ID },
+						ReportTemplateTable.QUESTION_ID + " = "
+										+ questionID, null, null, null,
+						"1");
 		SQLiteDatabase database = getWritableDatabase();
-		int result=database.delete(QuestionTable.TABLE_NAME, QuestionTable.ID+"=?", new String[]{questionID});
-		return result;
+		Cursor cursor = database.rawQuery(query, null);
+		if (cursor.getCount() == 0) {
+			int result = database.delete(QuestionTable.TABLE_NAME,
+							QuestionTable.ID + "=?",
+							new String[] { questionID });
+			return result;
+		} else {
+			return -3;
+		}
 	}
+
 	// Wrapper method for adding a Report Template
 	public long addReportTemplate(int questionId, String name,
 					String description) {
@@ -222,4 +261,86 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
+	public HashMap<String, String> getClient(int id) {
+
+		String[] columns = new String[] { ClientTable.ADDRESS,
+				ClientTable.CONTACT_NAME, ClientTable.NAME,
+				ClientTable.PHONE_NUMBER };
+		String query = SQLiteQueryBuilder.buildQueryString(false,
+						ClientTable.TABLE_NAME, columns, ClientTable.ID + "="
+										+ Integer.valueOf(id).toString(), null,
+						null, null, null);
+		SQLiteDatabase database = getWritableDatabase();
+		Cursor cursor = database.rawQuery(query, null);
+		HashMap<String, String> result = new HashMap<String, String>();
+		while (cursor.moveToNext()) {
+
+			result.put(ClientTable.ADDRESS, cursor.getString(cursor
+							.getColumnIndex(ClientTable.ADDRESS)));
+			result.put(ClientTable.CONTACT_NAME, cursor.getString(cursor
+							.getColumnIndex(ClientTable.CONTACT_NAME)));
+			result.put(ClientTable.NAME, cursor.getString(cursor
+							.getColumnIndex(ClientTable.NAME)));
+			result.put(ClientTable.PHONE_NUMBER, cursor.getString(cursor
+							.getColumnIndex(ClientTable.PHONE_NUMBER)));
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @return An <code>Arraylist</code>, where each element is a <code>HashMap</code> element with a
+	 *         <code>String</code> key that can be: <code>ClientTable.ID</code>, <code>ClientTable.NAME</code> or
+	 *         <code>ClientTable.CONTACT_NAME</code>. The value is the stored information for each one of these
+	 *         elements.
+	 */
+	public ArrayList<HashMap<String, String>> getClientNameAndContactName() {
+		String[] columns = new String[] { ClientTable.ID, ClientTable.ADDRESS,
+				ClientTable.CONTACT_NAME, ClientTable.NAME,
+				ClientTable.PHONE_NUMBER };
+		String query = SQLiteQueryBuilder.buildQueryString(false,
+						ClientTable.TABLE_NAME, columns, null, null, null,
+						null, null);
+		SQLiteDatabase database = getWritableDatabase();
+		Cursor cursor = database.rawQuery(query, null);
+		ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
+		while (cursor.moveToNext()) {
+			HashMap<String, String> hashMap = new HashMap<String, String>();
+			hashMap.put(ClientTable.ID, cursor.getString(cursor
+							.getColumnIndex(ClientTable.ID)));
+			hashMap.put(ClientTable.NAME, cursor.getString(cursor
+							.getColumnIndex(ClientTable.NAME)));
+			hashMap.put(ClientTable.CONTACT_NAME, cursor.getString(cursor
+							.getColumnIndex(ClientTable.CONTACT_NAME)));
+			result.add(hashMap);
+		}
+		return result;
+	}
+
+	/**
+	 * Wrapper method for deleting a client
+	 * 
+	 * @param clientID
+	 * @return The number of deleted columns. Returns <code>-3</code> if can not delete a client because a dependency
+	 *         with other table.
+	 */
+	public int deleteClient(String clientID) {
+		// Check first if this client is not included in some report row. If it is, then can not delete the client
+		String query = SQLiteQueryBuilder.buildQueryString(false,
+						ReportTable.TABLE_NAME,
+						new String[] { ReportTable.CLIENT_ID },
+						ReportTable.CLIENT_ID + " = "
+										+ clientID, null, null, null,
+						"1");
+		SQLiteDatabase database = getWritableDatabase();
+		Cursor cursor = database.rawQuery(query, null);
+		if (cursor.getCount() == 0) {
+			int result = database.delete(ClientTable.TABLE_NAME,
+							ClientTable.ID + "=?",
+							new String[] { clientID });
+			return result;
+		} else {
+			return -3;
+		}
+	}
 }

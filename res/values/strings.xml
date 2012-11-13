@@ -4,7 +4,6 @@
     <string name="cancel">Cancel</string>
     <string name="select">Select</string>
     <string name="delete">Delete</string>
-    
     <string name="delete_items">Delete items</string>
     <string name="add_item">Add item</string>
     <string name="select_items">Select items</string>
@@ -18,14 +17,19 @@
     <string name="activity_crud_questions_title">Questions</string>
     <string name="activity_crud_clients_title">Clients</string>
     <string name="activity_crud_report_templates_title">Report Templates</string>
+    <string name="client_name_hint">Type the client or Business name</string>
+    <string name="phone_number_hint">Type the phone number</string>
+    <string name="address_hint">Type the address</string>
+    <string name="contact_name_hint">Type the contact name</string>
 
     <!-- Validation error messages for EditText -->
     <string name="editText_validation_error_empty_field">The field cannot be empty.</string>
     <string name="editText_validation_error_numbers_only">Only numbers are allowed on this field.</string>
-    <string name="editText_validation_error_alpha_only">Only letters and spaces are allowed on this field.</string>
-    <string name="editText_validation_error_pipe_char_not_allowed">Pipe character (&quot;|&quot;) not allowed.</string>
-    <string name="editText_validation_error_char_not_allowed">The following characters are not allowed: (&quot;|&quot;).</string>
-    <string name="editText_validation_error_in_one_or_more">At least one field has validation errors. Cannot continue.</string>
+    <string name="editText_validation_error_numbers_and_spaces_only">Only numbers and spaces are allowed on this field</string>
+    <string name="editText_validation_error_alpha_only">Only letters and spaces are allowed on this field</string>
+    <string name="editText_validation_error_pipe_char_not_allowed">Pipe character (&quot;|&quot;) not allowed</string>
+    <string name="editText_validation_error_char_not_allowed">The following characters are not allowed: (&quot;|&quot;)</string>
+    <string name="editText_validation_error_in_one_or_more">At least one field has validation errors. Cannot continue</string>
 
     <!-- Database related messages -->
     <string name="database_error_storing_data">Error storing data in the database</string>
@@ -33,7 +37,6 @@
     <string name="database_success_updating_data">Data updated successfully</string>
     <string name="database_error_updating_data">Error updating data in the database</string>
     <string name="database_success_deleting_data">Data deleted successfully</string>
-    
     <string name="app_name">Geo Salesman</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
@@ -54,11 +57,15 @@
     <string name="no_questions_found">No questions found</string>
     <string name="tap_question_menu_to_add">Use the menu to add one</string>
     <string name="title_activity_add_new_question">AddNewQuestion</string>
-
+    
+    <!-- Add new Client activity -->
+    <string name="activity_add_new_client_update_title">Update Client</string>
+    <string name="activity_add_new_client_add_new_title_activity">Add new client</string>
+    <string name="no_clients_found">No clients found</string>
+    <string name="tap_client_menu_to_add">Tap client menu to add one</string>
     <!-- Add new Question activity -->
     <string name="activity_add_new_question_update_title">Update question</string>
     <string name="activity_add_new_question_add_new_title_activity">Add new question</string>
-    
     <string name="activity_add_new_question_spinner_question_type_prompt">Question type</string>
     <string name="activity_add_new_question_spinner_option_default_option">Question type</string>
     <string name="activity_add_new_question_spinner_option_yes_no">Yes/No</string>
@@ -88,5 +95,6 @@
     <string name="activity_add_new_question_no_answer_option">No</string>
     <string name="title_activity_question">Question</string>
     <string name="title_activity_crudobject">CRUDObject</string>
+    <string name="title_activity_add_new_client">AddNewClient</string>
 
 </resources>

@@ -86,9 +86,22 @@ public class Settings extends Activity {
 					startActivityForResult(intent, 1);
 				} else if (selectedOption.equals(getResources().getString(
 								R.string.clients))) {
-					// TODO
-					Toast.makeText(Settings.this, selectedOption,
-									Toast.LENGTH_LONG).show();
+					// Setup database elements
+					intent = intent.putExtra(CRUDObject.QUERY_SOURCE,
+									CRUDObject.CLIENTS)
+									.putExtra(CRUDObject.ADD_MENU_ITEM_ENABLED,
+													true)
+									.putExtra(CRUDObject.SELECT_BUTTON_ENABLED,
+													false)
+									.putExtra(CRUDObject.DELETE_BUTTON_ENABLED,
+													true)
+									.putExtra(CRUDObject.CANCEL_BUTTON_ENABLED,
+													true)
+									.putExtra(CRUDObject.ACTIVITY_TITLE,
+													getResources().getString(
+																	R.string.activity_crud_clients_title));
+					// start intent activity
+					startActivityForResult(intent, 1);
 				} else if (selectedOption.equals(getResources().getString(
 								R.string.report_templates))) {
 					// TODO
