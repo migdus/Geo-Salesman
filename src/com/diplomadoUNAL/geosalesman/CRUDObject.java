@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -184,6 +185,12 @@ public class CRUDObject extends Activity {
 	}
 
 	private void refreshListView() {
+		RelativeLayout noItemsFound = (RelativeLayout) this.findViewById(R.id.no_items_found_message);
+		noItemsFound.setVisibility(View.GONE);
+		
+		listViewItems.setVisibility(View.VISIBLE);
+		
+		
 		ArrayList<HashMap<String, String>> queryResults = null;
 		String row1 = null;
 		String row2 = null;
@@ -220,7 +227,11 @@ public class CRUDObject extends Activity {
 				data.add(datum);
 			}
 		} else {
-			HashMap<String, String> datum = new HashMap<String, String>(2);
+			//No items found
+			listViewItems.setVisibility(View.GONE);
+			
+			noItemsFound.setVisibility(View.VISIBLE);
+			
 			String text1ErrorMessage = null;
 			String text2ErrorMessage = null;
 
@@ -236,9 +247,12 @@ public class CRUDObject extends Activity {
 				text2ErrorMessage = getResources().getString(
 								R.string.tap_client_menu_to_add);
 			}
-			datum.put("text1", text1ErrorMessage);
-			datum.put("text2", text2ErrorMessage);
-			data.add(datum);
+			
+			
+			TextView largeTextView=(TextView) this.findViewById(R.id.textView_large_size);
+			TextView mediumTextView=(TextView) this.findViewById(R.id.textView_medium_size);
+			largeTextView.setText(text1ErrorMessage);
+			mediumTextView.setText(text2ErrorMessage);
 		}
 
 		twoLineWithCheckboxAdapter = new TwoLineWithCheckboxAdapter(this,
