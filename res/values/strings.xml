@@ -57,7 +57,7 @@
     <string name="no_questions_found">No questions found</string>
     <string name="tap_question_menu_to_add">Use the menu to add one</string>
     <string name="title_activity_add_new_question">AddNewQuestion</string>
-    
+
     <!-- Add new Client activity -->
     <string name="activity_add_new_client_update_title">Update Client</string>
     <string name="activity_add_new_client_add_new_title_activity">Add new client</string>
@@ -96,5 +96,9 @@
     <string name="title_activity_question">Question</string>
     <string name="title_activity_crudobject">CRUDObject</string>
     <string name="title_activity_add_new_client">AddNewClient</string>
+    <string name="title_activity_add_new_report_template">AddNewReportTemplate</string>
+    
+    <!-- Report Template -->
+    <string name="add_or_remove_questions">Add or remove questions</string>
 
 </resources>
