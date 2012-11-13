@@ -253,6 +253,7 @@ public class CRUDObject extends Activity {
 			TextView mediumTextView=(TextView) this.findViewById(R.id.textView_medium_size);
 			largeTextView.setText(text1ErrorMessage);
 			mediumTextView.setText(text2ErrorMessage);
+
 		}
 
 		twoLineWithCheckboxAdapter = new TwoLineWithCheckboxAdapter(this,
