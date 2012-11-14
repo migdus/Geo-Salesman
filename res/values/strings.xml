@@ -97,8 +97,14 @@
     <string name="title_activity_crudobject">CRUDObject</string>
     <string name="title_activity_add_new_client">AddNewClient</string>
     <string name="title_activity_add_new_report_template">AddNewReportTemplate</string>
-    
+
     <!-- Report Template -->
+    <string name="no_report_templates_found">No report templates found</string>
+    <string name="tap_report_templates_menu_to_add">Tap menu to add a new report template.</string>
     <string name="add_or_remove_questions">Add or remove questions</string>
+    <string name="report_template_name_hint">Type a name for this template</string>
+    <string name="report_template_description_hint">Type a description for this template</string>
+    <string name="report_template_number_of_questions_currently_added">Questions already added to this report:</string>
+    <string name="activity_add_new_report_template_update_title">Update Report Template</string>
 
 </resources>

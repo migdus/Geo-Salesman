@@ -3,6 +3,8 @@ package com.diplomadoUNAL.geosalesman.database;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.diplomadoUNAL.geosalesman.AddNewReportTemplate;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -19,7 +21,7 @@ public class SchemaHelper extends SQLiteOpenHelper {
 	}
 
 	// Toggle this number for updating tables and database
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	public SchemaHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -61,9 +63,14 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE " + ReportTemplateTable.TABLE_NAME + " ("
 						+ ReportTemplateTable.ID + pk + ","
 						+ ReportTemplateTable.NAME + textNotNull + ","
-						+ ReportTemplateTable.DESCRIPTION + textNotNull + ","
-						+ ReportTemplateTable.QUESTION_ID + integerNotNull
-						+ ");");
+						+ ReportTemplateTable.DESCRIPTION + textNotNull + ");");
+
+		db.execSQL("CREATE TABLE " + ReportTemplateQuestionTable.TABLE_NAME
+						+ " (" + ReportTemplateQuestionTable.ID + pk + ","
+						+ ReportTemplateQuestionTable.QUESTION_ID
+						+ integerNotNull + ","
+						+ ReportTemplateQuestionTable.REPORT_TEMPLATE_ID
+						+ integerNotNull + ");");
 	}
 
 	@Override
@@ -105,6 +112,22 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		SQLiteDatabase database = getWritableDatabase();
 		int result = database.update(ClientTable.TABLE_NAME, cv, ClientTable.ID
 						+ "=?", new String[] { clientID });
+		return result;
+	}
+
+	public long updateReportTemplate(String reportTemplateID, String name,
+					String description, ArrayList<Integer> questionID) {
+		ContentValues cv = new ContentValues();
+		cv.put(ReportTemplateTable.NAME, name);
+		cv.put(ReportTemplateTable.DESCRIPTION, description);
+
+		SQLiteDatabase database = getWritableDatabase();
+		long result = database.update(ReportTemplateTable.TABLE_NAME, cv,
+						ReportTemplateTable.ID + "=?",
+						new String[] { reportTemplateID });
+
+		deleteReportTemplateQuestionByReportTemplate(reportTemplateID);
+		result = addReportTemplateQuestion(reportTemplateID, questionID);
 		return result;
 	}
 
@@ -153,12 +176,14 @@ public class SchemaHelper extends SQLiteOpenHelper {
 	 */
 	public int deleteQuestion(String questionID) {
 		// Check first if this question is not included in some report template row. If it is, then can not delete the
-		String query = SQLiteQueryBuilder.buildQueryString(false,
-						ReportTemplateTable.TABLE_NAME,
-						new String[] { ReportTemplateTable.QUESTION_ID },
-						ReportTemplateTable.QUESTION_ID + " = "
-										+ questionID, null, null, null,
-						"1");
+		String query = SQLiteQueryBuilder
+						.buildQueryString(
+										false,
+										ReportTemplateQuestionTable.TABLE_NAME,
+										new String[] { ReportTemplateQuestionTable.QUESTION_ID },
+										ReportTemplateQuestionTable.QUESTION_ID
+														+ " = " + questionID,
+										null, null, null, "1");
 		SQLiteDatabase database = getWritableDatabase();
 		Cursor cursor = database.rawQuery(query, null);
 		if (cursor.getCount() == 0) {
@@ -171,23 +196,44 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	public int deleteReportTemplateQuestionByReportTemplate(
+					String reportTemplateID) {
+		SQLiteDatabase database = getWritableDatabase();
+		int result = database.delete(ReportTemplateQuestionTable.TABLE_NAME,
+						ReportTemplateQuestionTable.REPORT_TEMPLATE_ID + "=?",
+						new String[] { reportTemplateID });
+		return result;
+	}
+
 	// Wrapper method for adding a Report Template
-	public long addReportTemplate(int questionId, String name,
+	public long addReportTemplate(ArrayList<Integer> questionId, String name,
 					String description) {
 		ContentValues cv = new ContentValues();
 		cv.put(ReportTemplateTable.NAME, name);
 		cv.put(ReportTemplateTable.DESCRIPTION, description);
-		cv.put(ReportTemplateTable.QUESTION_ID, questionId);
 
 		SQLiteDatabase database = getWritableDatabase();
-		long result = database.insert(ReportTemplateTable.TABLE_NAME,
-						ReportTemplateTable.QUESTION_ID, cv);
-		return result;
+		long insertedRowId = database.insert(ReportTemplateTable.TABLE_NAME,
+						ReportTemplateTable.NAME, cv);
+
+		for (int i = 0; i < questionId.size(); i++) {
+			int qId = questionId.get(i);
+			cv = new ContentValues();
+			cv.put(ReportTemplateQuestionTable.QUESTION_ID, qId);
+			cv.put(ReportTemplateQuestionTable.REPORT_TEMPLATE_ID,
+							insertedRowId);
+
+			database.insert(ReportTemplateQuestionTable.TABLE_NAME,
+							ReportTemplateQuestionTable.ID, cv);
+		}
+
+		return insertedRowId;
 	}
 
 	// Wrapper method for adding a Report
 	public long addReport(String creationDate, String sentDate,
-					String location, String comments, int clientId) {
+					String location, String comments, int clientId,
+					int ReportTemplateId) {
 		ContentValues cv = new ContentValues();
 		cv.put(ReportTable.CREATION_DATE, creationDate);
 		cv.put(ReportTable.SENT_DATE, sentDate);
@@ -199,6 +245,26 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		long result = database.insert(ReportTable.TABLE_NAME,
 						ReportTable.CREATION_DATE, cv);
 		return result;
+	}
+
+	public long addReportTemplateQuestion(String ReportTemplateId,
+					ArrayList<Integer> questionId) {
+		SQLiteDatabase database = getWritableDatabase();
+
+		for (int i = 0; i < questionId.size(); i++) {
+			ContentValues cv = new ContentValues();
+			cv.put(ReportTemplateQuestionTable.QUESTION_ID, questionId.get(i));
+			cv.put(ReportTemplateQuestionTable.REPORT_TEMPLATE_ID,
+							ReportTemplateId);
+
+			long result = database.insert(
+							ReportTemplateQuestionTable.TABLE_NAME,
+							ReportTemplateQuestionTable.ID, cv);
+			if (result == -1)
+				return -1;
+		}
+
+		return 1;
 	}
 
 	/**
@@ -287,6 +353,49 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
+	public ArrayList<String> getReportTemplateQuestionByReportTemplateID(
+					int reportTemplateId) {
+		String[] columns = new String[] { ReportTemplateQuestionTable.QUESTION_ID };
+		String query = SQLiteQueryBuilder.buildQueryString(false,
+						ReportTemplateQuestionTable.TABLE_NAME, columns,
+						ReportTemplateQuestionTable.REPORT_TEMPLATE_ID
+										+ "="
+										+ Integer.valueOf(reportTemplateId)
+														.toString(), null,
+						null, null, null);
+		SQLiteDatabase database = getWritableDatabase();
+		Cursor cursor = database.rawQuery(query, null);
+		ArrayList<String> result = new ArrayList<String>();
+		while (cursor.moveToNext()) {
+			result.add(cursor.getString(cursor
+							.getColumnIndex(ReportTemplateQuestionTable.QUESTION_ID)));
+		}
+		return result;
+	}
+
+	public HashMap<String, String> getReportTemplate(int id) {
+
+		String[] columns = new String[] { ReportTemplateTable.NAME,
+				ReportTemplateTable.DESCRIPTION };
+		String query = SQLiteQueryBuilder.buildQueryString(false,
+						ReportTemplateTable.TABLE_NAME, columns,
+						ReportTemplateTable.ID + "="
+										+ Integer.valueOf(id).toString(), null,
+						null, null, null);
+		SQLiteDatabase database = getWritableDatabase();
+		Cursor cursor = database.rawQuery(query, null);
+		HashMap<String, String> result = new HashMap<String, String>();
+		while (cursor.moveToNext()) {
+
+			result.put(ReportTemplateTable.NAME, cursor.getString(cursor
+							.getColumnIndex(ReportTemplateTable.NAME)));
+			result.put(ReportTemplateTable.DESCRIPTION, cursor.getString(cursor
+							.getColumnIndex(ReportTemplateTable.DESCRIPTION)));
+
+		}
+		return result;
+	}
+
 	/**
 	 * 
 	 * @return An <code>Arraylist</code>, where each element is a <code>HashMap</code> element with a
@@ -317,6 +426,31 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
+	public ArrayList<HashMap<String, String>> getReportTemplateNameAndDescription() {
+
+		String[] columns = new String[] { ReportTemplateTable.ID,
+				ReportTemplateTable.NAME, ReportTemplateTable.DESCRIPTION };
+		String query = SQLiteQueryBuilder.buildQueryString(false,
+						ReportTemplateTable.TABLE_NAME, columns, null, null,
+						null, null, null);
+		SQLiteDatabase database = getWritableDatabase();
+		Cursor cursor = database.rawQuery(query, null);
+		ArrayList<HashMap<String, String>> result = new ArrayList<HashMap<String, String>>();
+		while (cursor.moveToNext()) {
+			HashMap<String, String> hashMap = new HashMap<String, String>();
+			hashMap.put(ReportTemplateTable.ID, cursor.getString(cursor
+							.getColumnIndex(ReportTemplateTable.ID)));
+			hashMap.put(ReportTemplateTable.NAME, cursor.getString(cursor
+							.getColumnIndex(ReportTemplateTable.NAME)));
+			hashMap.put(ReportTemplateTable.DESCRIPTION,
+							cursor.getString(cursor
+											.getColumnIndex(ReportTemplateTable.DESCRIPTION)));
+			result.add(hashMap);
+		}
+		return result;
+
+	}
+
 	/**
 	 * Wrapper method for deleting a client
 	 * 
@@ -329,15 +463,13 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		String query = SQLiteQueryBuilder.buildQueryString(false,
 						ReportTable.TABLE_NAME,
 						new String[] { ReportTable.CLIENT_ID },
-						ReportTable.CLIENT_ID + " = "
-										+ clientID, null, null, null,
-						"1");
+						ReportTable.CLIENT_ID + " = " + clientID, null, null,
+						null, "1");
 		SQLiteDatabase database = getWritableDatabase();
 		Cursor cursor = database.rawQuery(query, null);
 		if (cursor.getCount() == 0) {
-			int result = database.delete(ClientTable.TABLE_NAME,
-							ClientTable.ID + "=?",
-							new String[] { clientID });
+			int result = database.delete(ClientTable.TABLE_NAME, ClientTable.ID
+							+ "=?", new String[] { clientID });
 			return result;
 		} else {
 			return -3;

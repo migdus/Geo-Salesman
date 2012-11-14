@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.diplomadoUNAL.geosalesman.database.ClientTable;
 import com.diplomadoUNAL.geosalesman.database.QuestionTable;
+import com.diplomadoUNAL.geosalesman.database.ReportTemplateTable;
 import com.diplomadoUNAL.geosalesman.database.SchemaHelper;
 
 public class CRUDObject extends Activity {
@@ -41,6 +42,9 @@ public class CRUDObject extends Activity {
 	public final static String SELECT_BUTTON_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_SELECT_BUTTON_ENABLED";
 	public final static String CANCEL_BUTTON_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_CANCEL_BUTTON_ENABLED";
 
+	//Set the items checked when shown
+	public final static String SET_DISPLAYED_ITEMS_CHECKED = "com.diplomadoUNAL.geosalesman.SET_DISPLAYED_ITEMS_CHECKED";
+	
 	public final static String ACTIVITY_TITLE = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_ACTIVITY_TITLE";
 
 	Intent receivedIntent;
@@ -64,7 +68,16 @@ public class CRUDObject extends Activity {
 		selectButton.setText(R.string.select);
 		if (receivedIntent.getBooleanExtra(SELECT_BUTTON_ENABLED, true))
 			selectButton.setVisibility(View.VISIBLE);
-
+		selectButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent sendIntent = new Intent();
+				sendIntent.putExtra("checkedItems",
+								twoLineWithCheckboxAdapter.getChecked());
+				setResult(Intent.FLAG_GRANT_WRITE_URI_PERMISSION, sendIntent);
+				finish();
+			}
+		});
 		deleteButton = ((Button) this.findViewById(R.id.delete_button));
 		deleteButton.setText(R.string.delete);
 		if (receivedIntent.getBooleanExtra(DELETE_BUTTON_ENABLED, true))
@@ -161,7 +174,23 @@ public class CRUDObject extends Activity {
 																	.getDbId(text1,
 																					text2));
 					startActivityForResult(launchAddNewClient, 1);
-				} else {
+				}else if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+								REPORT_TEMPLATES)){
+					Intent launchAddNewReportTemplate = new Intent(CRUDObject.this,
+									AddNewReportTemplate.class);
+					launchAddNewReportTemplate
+									.putExtra(AddNewReportTemplate.ADD_NEW_REPORT_TEMPLATE_ACTIVITY_MODE,
+													AddNewReportTemplate.ACTIVITY_MODE_UPDATE)
+									.putExtra(ACTIVITY_TITLE,
+													R.string.activity_add_new_report_template_update_title)
+									.putExtra(AddNewReportTemplate.ACTIVITY_MODE_DB_ITEM_ID,
+													twoLineWithCheckboxAdapter
+																	.getDbId(text1,
+																					text2));
+					startActivityForResult(launchAddNewReportTemplate, 1);
+					
+				}
+				else {
 
 					Toast.makeText(CRUDObject.this, "Some error with this",
 									Toast.LENGTH_LONG).show();
@@ -185,12 +214,12 @@ public class CRUDObject extends Activity {
 	}
 
 	private void refreshListView() {
-		RelativeLayout noItemsFound = (RelativeLayout) this.findViewById(R.id.no_items_found_message);
+		RelativeLayout noItemsFound = (RelativeLayout) this
+						.findViewById(R.id.no_items_found_message);
 		noItemsFound.setVisibility(View.GONE);
-		
+
 		listViewItems.setVisibility(View.VISIBLE);
-		
-		
+
 		ArrayList<HashMap<String, String>> queryResults = null;
 		String row1 = null;
 		String row2 = null;
@@ -204,11 +233,17 @@ public class CRUDObject extends Activity {
 			rowId = QuestionTable.ID;
 		}
 		// Refresh view for Client table data source
-		if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(CLIENTS)) {
+		else if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(CLIENTS)) {
 			queryResults = schemaHelper.getClientNameAndContactName();
 			row1 = ClientTable.NAME;
 			row2 = ClientTable.CONTACT_NAME;
 			rowId = ClientTable.ID;
+		} else if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+						REPORT_TEMPLATES)) {
+			queryResults = schemaHelper.getReportTemplateNameAndDescription();
+			row1 = ReportTemplateTable.NAME;
+			row2 = ReportTemplateTable.DESCRIPTION;
+			rowId = ReportTemplateTable.ID;
 		} else {
 			// TODO Implement for other data sources: clients, etc...
 		}
@@ -227,11 +262,11 @@ public class CRUDObject extends Activity {
 				data.add(datum);
 			}
 		} else {
-			//No items found
+			// No items found
 			listViewItems.setVisibility(View.GONE);
-			
+
 			noItemsFound.setVisibility(View.VISIBLE);
-			
+
 			String text1ErrorMessage = null;
 			String text2ErrorMessage = null;
 
@@ -246,11 +281,18 @@ public class CRUDObject extends Activity {
 								R.string.no_clients_found);
 				text2ErrorMessage = getResources().getString(
 								R.string.tap_client_menu_to_add);
+			} else if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+							REPORT_TEMPLATES)) {
+				text1ErrorMessage = getResources().getString(
+								R.string.no_report_templates_found);
+				text2ErrorMessage = getResources().getString(
+								R.string.tap_report_templates_menu_to_add);
 			}
-			
-			
-			TextView largeTextView=(TextView) this.findViewById(R.id.textView_large_size);
-			TextView mediumTextView=(TextView) this.findViewById(R.id.textView_medium_size);
+
+			TextView largeTextView = (TextView) this
+							.findViewById(R.id.textView_large_size);
+			TextView mediumTextView = (TextView) this
+							.findViewById(R.id.textView_medium_size);
 			largeTextView.setText(text1ErrorMessage);
 			mediumTextView.setText(text2ErrorMessage);
 
@@ -260,8 +302,7 @@ public class CRUDObject extends Activity {
 						R.layout.simple_list_item_2_with_checkbox, data,
 						floatingBar);
 		listViewItems.setAdapter(twoLineWithCheckboxAdapter);
-		twoLineWithCheckboxAdapter.changeCheckboxesState(View.GONE);
-
+		twoLineWithCheckboxAdapter.changeCheckboxesVisibility(View.GONE);
 	}
 
 	@Override
@@ -299,6 +340,14 @@ public class CRUDObject extends Activity {
 				intent = new Intent(CRUDObject.this, AddNewClient.class);
 				intent.putExtra(AddNewClient.ADD_NEW_CLIENT_ACTIVITY_MODE,
 								AddNewClient.ACTIVITY_MODE_ADD_NEW)
+								.putExtra(ACTIVITY_TITLE,
+												R.string.activity_add_new_client_add_new_title_activity);
+
+			} else if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+							REPORT_TEMPLATES)) {
+				intent = new Intent(CRUDObject.this, AddNewReportTemplate.class);
+				intent.putExtra(AddNewReportTemplate.ADD_NEW_REPORT_TEMPLATE_ACTIVITY_MODE,
+								AddNewReportTemplate.ACTIVITY_MODE_ADD_NEW)
 								.putExtra(ACTIVITY_TITLE,
 												R.string.activity_add_new_client_add_new_title_activity);
 

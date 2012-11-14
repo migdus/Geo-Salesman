@@ -43,7 +43,7 @@ public class TwoLineWithCheckboxAdapter extends
 		CheckBox checkBox;
 	}
 
-	public void changeCheckboxesState(int visibility) {
+	public void changeCheckboxesVisibility(int visibility) {
 		for (int i = 0; i < allCheckBoxes.size(); i++) {
 			allCheckBoxes.get(i).setVisibility(visibility);
 		}
