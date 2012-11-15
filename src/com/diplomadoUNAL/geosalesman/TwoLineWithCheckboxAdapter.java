@@ -25,28 +25,38 @@ public class TwoLineWithCheckboxAdapter extends
 
 	LinearLayout floatingBar;
 
-	ArrayList<CheckBox> allCheckBoxes;
-
+	/**
+	 * 
+	 * @param context
+	 * @param textViewResourceId
+	 * @param data
+	 * @param floatingBar
+	 * @param checkedItemsId
+	 *            the items that should be checked, according with their database id. <code>null</code> if none.
+	 */
 	public TwoLineWithCheckboxAdapter(Context context, int textViewResourceId,
 					ArrayList<HashMap<String, String>> data,
-					LinearLayout floatingBar) {
+					LinearLayout floatingBar, ArrayList<Integer> checkedItemsId) {
 		super(context, textViewResourceId, data);
 		this.floatingBar = floatingBar;
 		checkBoxState = new boolean[data.size()];
 		this.objects = data;
-		allCheckBoxes = new ArrayList<CheckBox>();
+
+		
+		if (checkedItemsId != null)
+			for (int i = 0; i < data.size(); i++) {
+				int dbId = Integer.parseInt(data.get(i).get("dbId"));
+				for (int j = 0; j < checkedItemsId.size(); j++) {
+					if (dbId == checkedItemsId.get(j))
+						checkBoxState[i] = true;
+				}
+			}
 	}
 
 	// class for caching the views in a row
 	private class ViewHolder {
 		TextView text1, text2;
 		CheckBox checkBox;
-	}
-
-	public void changeCheckboxesVisibility(int visibility) {
-		for (int i = 0; i < allCheckBoxes.size(); i++) {
-			allCheckBoxes.get(i).setVisibility(visibility);
-		}
 	}
 
 	public ArrayList<HashMap<String, String>> getChecked() {
@@ -103,7 +113,6 @@ public class TwoLineWithCheckboxAdapter extends
 		viewHolder.text1.setText(objects.get(position).get("text1").toString());
 		viewHolder.text2.setText(objects.get(position).get("text2").toString());
 		viewHolder.checkBox.setChecked(checkBoxState[position]);
-		allCheckBoxes.add(viewHolder.checkBox);
 
 		// for managing the state of the boolean
 		// array according to the state of the

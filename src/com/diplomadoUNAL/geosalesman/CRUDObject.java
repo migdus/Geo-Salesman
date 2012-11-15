@@ -41,10 +41,13 @@ public class CRUDObject extends Activity {
 	public final static String DELETE_BUTTON_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_DELETE_BUTTON_ENABLED";
 	public final static String SELECT_BUTTON_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_SELECT_BUTTON_ENABLED";
 	public final static String CANCEL_BUTTON_ENABLED = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_CANCEL_BUTTON_ENABLED";
+	public final static String REPORT_TEMPLATE_QUESTIONS = "com.diplomadoUNAL.geosalesman.REPORT_TEMPLATE_QUESTIONS";
 
-	//Set the items checked when shown
+	public final static String ACTIVITY_MODE_DB_ITEM_ID = "com.diplomadoUNAL.geosalesman.itemId";
+
+	// Set the items checked when shown
 	public final static String SET_DISPLAYED_ITEMS_CHECKED = "com.diplomadoUNAL.geosalesman.SET_DISPLAYED_ITEMS_CHECKED";
-	
+
 	public final static String ACTIVITY_TITLE = "com.diplomadoUNAL.geosalesman.CRUD_OBJ_ACTIVITY_TITLE";
 
 	Intent receivedIntent;
@@ -105,6 +108,10 @@ public class CRUDObject extends Activity {
 					if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
 									CLIENTS)) {
 						result = schemaHelper.deleteClient(dbId);
+					}
+					//Report Template table
+					if(receivedIntent.getStringExtra(QUERY_SOURCE).equals(REPORT_TEMPLATES)){
+						result=schemaHelper.deleteReportTemplate(dbId);
 					}
 
 					if (result > 0) {
@@ -174,10 +181,10 @@ public class CRUDObject extends Activity {
 																	.getDbId(text1,
 																					text2));
 					startActivityForResult(launchAddNewClient, 1);
-				}else if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
-								REPORT_TEMPLATES)){
-					Intent launchAddNewReportTemplate = new Intent(CRUDObject.this,
-									AddNewReportTemplate.class);
+				} else if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+								REPORT_TEMPLATES)) {
+					Intent launchAddNewReportTemplate = new Intent(
+									CRUDObject.this, AddNewReportTemplate.class);
 					launchAddNewReportTemplate
 									.putExtra(AddNewReportTemplate.ADD_NEW_REPORT_TEMPLATE_ACTIVITY_MODE,
 													AddNewReportTemplate.ACTIVITY_MODE_UPDATE)
@@ -188,9 +195,8 @@ public class CRUDObject extends Activity {
 																	.getDbId(text1,
 																					text2));
 					startActivityForResult(launchAddNewReportTemplate, 1);
-					
-				}
-				else {
+
+				} else {
 
 					Toast.makeText(CRUDObject.this, "Some error with this",
 									Toast.LENGTH_LONG).show();
@@ -226,7 +232,9 @@ public class CRUDObject extends Activity {
 		String rowId = null;
 
 		// Refresh view for Question table data source
-		if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(QUESTIONS)) {
+		if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(QUESTIONS)
+						|| receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+										REPORT_TEMPLATE_QUESTIONS)) {
 			queryResults = schemaHelper.getQuestionsTitlesAndDescriptions();
 			row1 = QuestionTable.QUESTION_TITLE;
 			row2 = QuestionTable.QUESTION_DESCRIPTION;
@@ -238,7 +246,10 @@ public class CRUDObject extends Activity {
 			row1 = ClientTable.NAME;
 			row2 = ClientTable.CONTACT_NAME;
 			rowId = ClientTable.ID;
-		} else if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+		}
+
+		// Refresh view for Client table data source
+		else if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
 						REPORT_TEMPLATES)) {
 			queryResults = schemaHelper.getReportTemplateNameAndDescription();
 			row1 = ReportTemplateTable.NAME;
@@ -298,11 +309,32 @@ public class CRUDObject extends Activity {
 
 		}
 
+		// twoLineWithCheckboxAdapter.changeCheckboxesVisibility(View.GONE);
+		// Check the questions that are selected for this particular report template
+		ArrayList<Integer> dbIds = null;
+		if (receivedIntent.hasExtra(ACTIVITY_MODE_DB_ITEM_ID)
+						&& receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+										REPORT_TEMPLATE_QUESTIONS)) {
+
+			ArrayList<String> result = schemaHelper
+							.getReportTemplateQuestionByReportTemplateID(Integer.parseInt(receivedIntent
+											.getStringExtra(ACTIVITY_MODE_DB_ITEM_ID)));
+			ArrayList<Integer> temp = new ArrayList<Integer>();
+			for (int i = 0; i < result.size(); i++) {
+				String qId = result.get(i);
+				temp.add(Integer.parseInt(qId));
+			}
+			dbIds = temp;
+			// twoLineWithCheckboxAdapter.notifyDataSetChanged();
+			// receivedIntent.putExtra(QUERY_SOURCE, QUESTIONS);
+
+		}
+
 		twoLineWithCheckboxAdapter = new TwoLineWithCheckboxAdapter(this,
 						R.layout.simple_list_item_2_with_checkbox, data,
-						floatingBar);
+						floatingBar, dbIds);
+
 		listViewItems.setAdapter(twoLineWithCheckboxAdapter);
-		twoLineWithCheckboxAdapter.changeCheckboxesVisibility(View.GONE);
 	}
 
 	@Override

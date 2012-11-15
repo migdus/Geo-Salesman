@@ -118,7 +118,7 @@ public class Settings extends Activity {
 													true)
 									.putExtra(CRUDObject.ACTIVITY_TITLE,
 													getResources().getString(
-																	R.string.activity_crud_questions_title));
+																	R.string.activity_crud_report_templates_title));
 					// start intent activity
 					startActivityForResult(intent, 1);
 				

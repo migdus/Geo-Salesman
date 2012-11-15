@@ -140,19 +140,30 @@ public class AddNewReportTemplate extends Activity {
 								AddNewReportTemplate.this, CRUDObject.class);
 				callQuestionsIntent
 								.putExtra(CRUDObject.QUERY_SOURCE,
-												CRUDObject.QUESTIONS)
+												CRUDObject.REPORT_TEMPLATE_QUESTIONS)
 								.putExtra(CRUDObject.ADD_MENU_ITEM_ENABLED,
-												true)
+												false)
 								.putExtra(CRUDObject.SELECT_BUTTON_ENABLED,
 												true)
 								.putExtra(CRUDObject.DELETE_BUTTON_ENABLED,
-												true)
+												false)
 								.putExtra(CRUDObject.CANCEL_BUTTON_ENABLED,
 												true)
-												.putExtra(CRUDObject.SET_DISPLAYED_ITEMS_CHECKED, true)
+								.putExtra(CRUDObject.SET_DISPLAYED_ITEMS_CHECKED,
+												true)
+
 								.putExtra(CRUDObject.ACTIVITY_TITLE,
 												getResources().getString(
 																R.string.activity_crud_questions_title));
+				if (receivedIntent.getStringExtra(
+								ADD_NEW_REPORT_TEMPLATE_ACTIVITY_MODE).equals(
+								ACTIVITY_MODE_READ_ONLY)
+								|| receivedIntent
+												.getStringExtra(ADD_NEW_REPORT_TEMPLATE_ACTIVITY_MODE)
+												.equals(ACTIVITY_MODE_UPDATE))
+					callQuestionsIntent
+									.putExtra(CRUDObject.ACTIVITY_MODE_DB_ITEM_ID,
+													receivedIntent.getStringExtra(ACTIVITY_MODE_DB_ITEM_ID));
 				// start intent activity
 				startActivityForResult(callQuestionsIntent,
 								REQUEST_GET_SELECTED_QUESTIONS);
@@ -160,7 +171,7 @@ public class AddNewReportTemplate extends Activity {
 		});
 		Button cancelButton = (Button) this.findViewById(R.id.cancel_button);
 		cancelButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				finish();

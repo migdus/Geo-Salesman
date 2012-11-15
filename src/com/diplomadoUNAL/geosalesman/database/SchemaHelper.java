@@ -131,6 +131,7 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
+
 	// Wrapper method for adding a question
 	public long addQuestion(String questionTitle, String question,
 					String questionDescription, String questionType,
@@ -201,6 +202,14 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		SQLiteDatabase database = getWritableDatabase();
 		int result = database.delete(ReportTemplateQuestionTable.TABLE_NAME,
 						ReportTemplateQuestionTable.REPORT_TEMPLATE_ID + "=?",
+						new String[] { reportTemplateID });
+		return result;
+	}
+	
+	public int deleteReportTemplate(String reportTemplateID){
+		SQLiteDatabase database = getWritableDatabase();
+		int result = database.delete(ReportTemplateTable.TABLE_NAME,
+						ReportTemplateTable.ID + "=?",
 						new String[] { reportTemplateID });
 		return result;
 	}
