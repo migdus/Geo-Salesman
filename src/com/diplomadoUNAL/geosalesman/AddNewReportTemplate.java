@@ -258,12 +258,15 @@ public class AddNewReportTemplate extends Activity {
 		switch (requestCode) {
 
 		case REQUEST_GET_SELECTED_QUESTIONS:
-			checkedQuestionsID = new ArrayList<Integer>();
-			ArrayList<HashMap<String, String>> temp = (ArrayList<HashMap<String, String>>) receivedData
-							.getSerializableExtra("checkedItems");
-			for (int i = 0; i < temp.size(); i++) {
-				HashMap<String, String> hashMap = temp.get(i);
-				checkedQuestionsID.add(Integer.parseInt(hashMap.get("dbId")));
+			if (receivedData != null && receivedData.hasExtra("checkedItems")) {
+				checkedQuestionsID = new ArrayList<Integer>();
+				ArrayList<HashMap<String, String>> temp = (ArrayList<HashMap<String, String>>) receivedData
+								.getSerializableExtra("checkedItems");
+				for (int i = 0; i < temp.size(); i++) {
+					HashMap<String, String> hashMap = temp.get(i);
+					checkedQuestionsID
+									.add(Integer.parseInt(hashMap.get("dbId")));
+				}
 			}
 			break;
 		}

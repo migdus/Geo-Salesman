@@ -135,6 +135,20 @@ public class CRUDObject extends Activity {
 			@Override
 			public void onClick(View v) {
 				finish();
+				if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+								QUESTIONS)) {
+					
+
+				} else
+				
+				if (receivedIntent.getStringExtra(QUERY_SOURCE).equals(
+								CLIENTS)) {
+					
+				}
+				//Report Template table
+				if(receivedIntent.getStringExtra(QUERY_SOURCE).equals(REPORT_TEMPLATES)){
+					
+				}
 			}
 		});
 
