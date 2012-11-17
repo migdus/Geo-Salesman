@@ -131,5 +131,6 @@
         <b>Answer: </b>$answer
         </p>]]>
     </string>
+    <string name="title_activity_location">Location</string>
 
 </resources>

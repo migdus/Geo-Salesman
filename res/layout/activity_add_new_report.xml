@@ -9,33 +9,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <EditText
-                android:id="@+id/editTextCreationDate"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/creation_date"
-                android:inputType="date" />
-
-            <Button
-                android:id="@+id/buttonSetCreationDate"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="@string/now" />
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/editTextLocation"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/tap_to_set_location"
-            android:inputType="none" />
-
         <EditText
             android:id="@+id/editTextComments"
             android:layout_width="fill_parent"
@@ -62,6 +35,13 @@
             android:enabled="false"
             android:text="@string/answer_questions" />
 
+        <Button
+            android:id="@+id/buttonSetLocation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:enabled="true"
+            android:text="@string/set_location" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,16 +51,16 @@
                 android:id="@+id/buttonSendReport"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:enabled="false"
                 android:layout_weight="1"
+                android:enabled="false"
                 android:text="@string/send" />
 
             <Button
                 android:id="@+id/cancelButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:enabled="true"
-                 android:layout_weight="1"
                 android:text="@string/cancel" />
         </LinearLayout>
     </LinearLayout>
