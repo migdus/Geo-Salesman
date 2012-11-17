@@ -362,7 +362,7 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		return result;
 	}
 
-	public ArrayList<String> getReportTemplateQuestionByReportTemplateID(
+	public ArrayList<String> getReportTemplateQuestionIDByReportTemplateID(
 					int reportTemplateId) {
 		String[] columns = new String[] { ReportTemplateQuestionTable.QUESTION_ID };
 		String query = SQLiteQueryBuilder.buildQueryString(false,

@@ -331,7 +331,7 @@ public class CRUDObject extends Activity {
 										REPORT_TEMPLATE_QUESTIONS)) {
 
 			ArrayList<String> result = schemaHelper
-							.getReportTemplateQuestionByReportTemplateID(Integer.parseInt(receivedIntent
+							.getReportTemplateQuestionIDByReportTemplateID(Integer.parseInt(receivedIntent
 											.getStringExtra(ACTIVITY_MODE_DB_ITEM_ID)));
 			ArrayList<Integer> temp = new ArrayList<Integer>();
 			for (int i = 0; i < result.size(); i++) {

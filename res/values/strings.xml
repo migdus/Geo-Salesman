@@ -1,5 +1,7 @@
 <resources>
 
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="select">Select</string>
@@ -106,5 +108,28 @@
     <string name="report_template_description_hint">Type a description for this template</string>
     <string name="report_template_number_of_questions_currently_added">Questions already added to this report:</string>
     <string name="activity_add_new_report_template_update_title">Update Report Template</string>
+    <string name="title_activity_add_new_report">Add New Report</string>
+
+    <!-- Report -->
+    <string name="creation_date">Creation Date</string>
+    <string name="now">Now</string>
+    <string name="set_location">Set location</string>
+    <string name="type_your_comments">Type your comments</string>
+    <string name="answer_questions">Answer questions</string>
+    <string name="client">Tap to set the client</string>
+    <string name="select_client">Select client</string>
+    <string name="set_report_template">Tap to set the report template</string>
+    <string name="title_activity_answer_questions">Answer Questions</string>
+    <string name="write_your_answer_here">Write your answer here</string>
+    <string name="send">Send</string>
+    <string name="tap_to_set_location">Tap to set location</string>
+    <string name="question_report_answer">
+<![CDATA[<p>
+        <b>Question Title: </b>$question_title<br>
+        <b>Question Description: </b>$question_description<br>
+        <b>Question: </b>$question<br>
+        <b>Answer: </b>$answer
+        </p>]]>
+    </string>
 
 </resources>

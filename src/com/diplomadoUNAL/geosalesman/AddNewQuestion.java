@@ -31,12 +31,12 @@ public class AddNewQuestion extends Activity {
 	// SharedPreferences items for this activity
 	private static final String PREF_SELECTED_QUESTION_TYPE = "selectedQuestionType";
 	// Range question type
-	private static final String QUESTION_TYPE_NONE_SELECTED = "questionTypeNoneSelected";
-	private static final String QUESTION_TYPE_RANGE = "questionTypeRange";
-	private static final String QUESTION_TYPE_YES_NO = "questionTypeYesNo";
-	private static final String QUESTION_TYPE_OPEN = "questionTypeOpen";
-	private static final String PREF_MINIMUM_RANGE_VALUE = "addNewQuestionSaveMinimumRangeValue";
-	private static final String PREF_MAXIMUM_RANGE_VALUE = "addNewQuestionSaveMaximumRangeValue";
+	public static final String QUESTION_TYPE_NONE_SELECTED = "questionTypeNoneSelected";
+	public static final String QUESTION_TYPE_RANGE = "questionTypeRange";
+	public static final String QUESTION_TYPE_YES_NO = "questionTypeYesNo";
+	public static final String QUESTION_TYPE_OPEN = "questionTypeOpen";
+	public static final String PREF_MINIMUM_RANGE_VALUE = "addNewQuestionSaveMinimumRangeValue";
+	public static final String PREF_MAXIMUM_RANGE_VALUE = "addNewQuestionSaveMaximumRangeValue";
 	// validation flags
 	private boolean flagEditTextQuestionTitleValidation = false;
 	private boolean flagEditTextQuestionDescriptionValidation = false;

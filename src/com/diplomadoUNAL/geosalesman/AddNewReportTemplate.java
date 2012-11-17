@@ -122,9 +122,9 @@ public class AddNewReportTemplate extends Activity {
 			reportTemplateDescription.setText(storedValues
 							.get(ReportTemplateTable.DESCRIPTION));
 			reportTemplateQuestionsAdded
-							.setText(R.string.report_template_number_of_questions_currently_added
+							.setText(getResources().getString(R.string.report_template_number_of_questions_currently_added)
 											+ Integer.toString(schemaHelper
-															.getReportTemplateQuestionByReportTemplateID(
+															.getReportTemplateQuestionIDByReportTemplateID(
 																			dbId)
 															.size()));
 		}
