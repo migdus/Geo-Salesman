@@ -41,8 +41,6 @@ public class AnswerQuestions extends Activity {
 
 		mReceivedIntent = getIntent();
 
-		StringBuilder stringBuilder = new StringBuilder();
-
 		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
 
 		// get the report template id from database
@@ -146,6 +144,7 @@ public class AnswerQuestions extends Activity {
 								LayoutParams.MATCH_PARENT,
 								LayoutParams.WRAP_CONTENT);
 				layoutParams.weight = 1;
+
 				horizontalLinearLayout.addView(seekBar, layoutParams);
 				seekBarList.add(seekBar);
 				layoutParams = new LinearLayout.LayoutParams(
@@ -184,7 +183,7 @@ public class AnswerQuestions extends Activity {
 					// add the radio button
 					RadioButton radioButton = new RadioButton(this);
 					radioButtonList.add(radioButton);
-					
+
 					String[] respuestas = new String[4];
 					respuestas[0] = questionDetails
 									.get(QuestionTable.QUESTION_TITLE);
@@ -264,37 +263,56 @@ public class AnswerQuestions extends Activity {
 							.inflate(R.layout.separator, null)
 							.findViewById(R.id.separator));
 		}
+		LinearLayout okCancelButton = (LinearLayout) this.getLayoutInflater()
+						.inflate(R.layout.ok_cancel_button, null);
+		linearLayout.addView(okCancelButton);
 
-		Button okButton = (Button) findViewById(R.id.okButton);
+		Button okButton = (Button) okCancelButton.findViewById(R.id.okButton);
 		okButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				StringBuilder questionReportAnswers = new StringBuilder();
-				
-				for(RadioButton radioButton:radioButtonList){
-					if(radioButton.isChecked()){
-						String textToSend =getResources().getString(R.string.question_report_answer);
-						textToSend=textToSend.replace("$question_title", ((String [])radioButton.getTag())[0]);
-						textToSend=textToSend.replace("$question_description", ((String [])radioButton.getTag())[1]);
-						textToSend=textToSend.replace("$question", ((String [])radioButton.getTag())[2]);
-						textToSend=textToSend.replace("$answer", ((String [])radioButton.getTag())[3]);
+
+				for (RadioButton radioButton : radioButtonList) {
+					if (radioButton.isChecked()) {
+						String textToSend = getResources().getString(
+										R.string.question_report_answer);
+						textToSend = textToSend.replace("$question_title",
+										((String[]) radioButton.getTag())[0]);
+						textToSend = textToSend.replace(
+										"$question_description",
+										((String[]) radioButton.getTag())[1]);
+						textToSend = textToSend.replace("$question",
+										((String[]) radioButton.getTag())[2]);
+						textToSend = textToSend.replace("$answer",
+										((String[]) radioButton.getTag())[3]);
 						questionReportAnswers.append(textToSend);
 					}
 				}
-				for(EditText editText:editTextList){
-					String textToSend =getResources().getString(R.string.question_report_answer);
-					textToSend=textToSend.replace("$question_title", ((String [])editText.getTag())[0]);
-					textToSend=textToSend.replace("$question_description", ((String [])editText.getTag())[1]);
-					textToSend=textToSend.replace("$question", ((String [])editText.getTag())[2]);
-					textToSend=textToSend.replace("$answer", ((String [])editText.getTag())[3]);
+				for (EditText editText : editTextList) {
+					String textToSend = getResources().getString(
+									R.string.question_report_answer);
+					textToSend = textToSend.replace("$question_title",
+									((String[]) editText.getTag())[0]);
+					textToSend = textToSend.replace("$question_description",
+									((String[]) editText.getTag())[1]);
+					textToSend = textToSend.replace("$question",
+									((String[]) editText.getTag())[2]);
+					textToSend = textToSend.replace("$answer",
+									((String[]) editText.getTag())[3]);
 					questionReportAnswers.append(textToSend);
 				}
-				for(SeekBar seekBar:seekBarList){
-					String textToSend =getResources().getString(R.string.question_report_answer);
-					textToSend=textToSend.replace("$question_title", ((String [])seekBar.getTag())[0]);
-					textToSend=textToSend.replace("$question_description", ((String [])seekBar.getTag())[1]);
-					textToSend=textToSend.replace("$question", ((String [])seekBar.getTag())[2]);
-					textToSend=textToSend.replace("$answer", ((String [])seekBar.getTag())[3]);
+				for (SeekBar seekBar : seekBarList) {
+					String textToSend = getResources().getString(
+									R.string.question_report_answer);
+					textToSend = textToSend.replace("$question_title",
+									((String[]) seekBar.getTag())[0]);
+					textToSend = textToSend.replace("$question_description",
+									((String[]) seekBar.getTag())[1]);
+					textToSend = textToSend.replace("$question",
+									((String[]) seekBar.getTag())[2]);
+					textToSend = textToSend.replace("$answer",
+									((String[]) seekBar.getTag())[3]);
 					questionReportAnswers.append(seekBar);
 				}
 				Intent sendIntent = new Intent();
@@ -302,11 +320,11 @@ public class AnswerQuestions extends Activity {
 								questionReportAnswers.toString());
 				setResult(Intent.FLAG_GRANT_WRITE_URI_PERMISSION, sendIntent);
 				finish();
-				
 
 			}
 		});
-		Button cancelButton = (Button) findViewById(R.id.cancelButton);
+		Button cancelButton = (Button) okCancelButton
+						.findViewById(R.id.cancelButton);
 		cancelButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
