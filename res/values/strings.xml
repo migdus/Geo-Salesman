@@ -19,10 +19,10 @@
     <string name="activity_crud_questions_title">Questions</string>
     <string name="activity_crud_clients_title">Clients</string>
     <string name="activity_crud_report_templates_title">Report Templates</string>
-    <string name="client_name_hint">Type the client or Business name</string>
-    <string name="phone_number_hint">Type the phone number</string>
-    <string name="address_hint">Type the address</string>
-    <string name="contact_name_hint">Type the contact name</string>
+    <string name="client_name_hint">Client or Business name</string>
+    <string name="phone_number_hint">Phone number</string>
+    <string name="address_hint">Address</string>
+    <string name="contact_name_hint">Contact name</string>
 
     <!-- Validation error messages for EditText -->
     <string name="editText_validation_error_empty_field">The field cannot be empty.</string>
@@ -84,12 +84,12 @@
     </string-array>
 
     <string name="spinner_question_error_no_option_chosen">Please choose a question type</string>
-    <string name="activity_add_new_question_type_question_title_hint">Type the question title</string>
-    <string name="activity_add_new_question_type_question_description_hint">Type question description</string>
-    <string name="activity_add_new_question_type_your_question_hint">Type the question</string>
+    <string name="activity_add_new_question_type_question_title_hint">Question Title</string>
+    <string name="activity_add_new_question_type_question_description_hint">Question Description</string>
+    <string name="activity_add_new_question_type_your_question_hint">Question</string>
     <!-- Range Selection Dialog -->
     <string name="activity_add_new_question_scale_selection_dialog_title">Select Range</string>
-    <string name="activity_add_new_question_scale_selection_dialog_message">Please select a minimum and a maximun number</string>
+    <string name="activity_add_new_question_scale_selection_dialog_message">Type minimum and maximun values for this range</string>
     <string name="activity_add_new_question_maximum_value_hint">Maximum Value</string>
     <string name="activity_add_new_question_minimum_value_hint">Minimum Value</string>
     <!-- Yes/No answer options -->
@@ -104,8 +104,8 @@
     <string name="no_report_templates_found">No report templates found</string>
     <string name="tap_report_templates_menu_to_add">Tap menu to add a new report template.</string>
     <string name="add_or_remove_questions">Add or remove questions</string>
-    <string name="report_template_name_hint">Type a name for this template</string>
-    <string name="report_template_description_hint">Type a description for this template</string>
+    <string name="report_template_name_hint">Template Name</string>
+    <string name="report_template_description_hint">Template description</string>
     <string name="report_template_number_of_questions_currently_added">Questions already added to this report:</string>
     <string name="activity_add_new_report_template_update_title">Update Report Template</string>
     <string name="title_activity_add_new_report">Add New Report</string>

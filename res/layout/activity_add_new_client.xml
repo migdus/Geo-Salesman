@@ -7,34 +7,23 @@
 
     <EditText
         android:id="@+id/client_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
-        android:hint="@string/client_name_hint" >
-    </EditText>
+        style="@style/text_view_inside_linear_layout"
+        android:hint="@string/client_name_hint" />
 
     <EditText
         android:id="@+id/phone_number"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
+        style="@style/text_view_inside_linear_layout"
         android:hint="@string/phone_number_hint" />
+
 
     <EditText
         android:id="@+id/address"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
+        style="@style/text_view_inside_linear_layout"
         android:hint="@string/address_hint" />
-<EditText
+
+    <EditText
         android:id="@+id/contact_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
+        style="@style/text_view_inside_linear_layout"
         android:hint="@string/contact_name_hint" />
 
     <LinearLayout
@@ -46,16 +35,12 @@
 
         <Button
             android:id="@+id/ok_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/button_inside_linear_layout"
             android:text="@string/ok" />
 
         <Button
             android:id="@+id/cancel_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/button_inside_linear_layout"
             android:text="@string/cancel" />
     </LinearLayout>
 

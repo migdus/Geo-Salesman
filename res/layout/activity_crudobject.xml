@@ -45,25 +45,19 @@
 
         <Button
             android:id="@+id/select_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/button_inside_linear_layout"
             android:text="@string/select"
             android:visibility="gone" />
 
         <Button
             android:id="@+id/delete_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/button_inside_linear_layout"
             android:text="@string/delete"
             android:visibility="gone" />
 
         <Button
             android:id="@+id/cancel_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+           style="@style/button_inside_linear_layout"
             android:text="@string/cancel"
             android:visibility="gone" />
     </LinearLayout>

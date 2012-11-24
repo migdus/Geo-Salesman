@@ -6,49 +6,35 @@
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/activity_add_new_question_scale_selection_dialog_message"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        style="@style/text_view_inside_linear_layout"
+        android:text="@string/activity_add_new_question_scale_selection_dialog_message" />
 
     <EditText
         android:id="@+id/activity_add_new_question_editText_minimum_value"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        android:hint="@string/activity_add_new_question_minimum_value_hint" >
-
-        <requestFocus />
-    </EditText>
+        style="@style/text_view_inside_linear_layout"
+        android:hint="@string/activity_add_new_question_minimum_value_hint"
+        android:inputType="number" />
 
     <EditText
         android:id="@+id/activity_add_new_question_editText_maximum_value"
+        style="@style/text_view_inside_linear_layout"
+        android:hint="@string/activity_add_new_question_maximum_value_hint"
+        android:inputType="number" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        android:hint="@string/activity_add_new_question_maximum_value_hint"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/activity_add_new_question_range_selection_button_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/button_inside_linear_layout"
             android:text="@string/ok" />
-        
+
         <Button
             android:id="@+id/activity_add_new_question_range_selection_button_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/activity_add_new_question_range_selection_button_ok"
+            style="@style/button_inside_linear_layout"
             android:text="@string/cancel" />
-
-        
-
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

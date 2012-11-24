@@ -11,21 +11,18 @@
 
         <EditText
             android:id="@+id/editTextComments"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            style="@style/text_view_inside_linear_layout"
             android:hint="@string/type_your_comments"
             android:inputType="textMultiLine" />
 
         <EditText
             android:id="@+id/editTextClient"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            style="@style/text_view_inside_linear_layout"
             android:hint="@string/client" />
 
         <EditText
             android:id="@+id/editTextReportTemplateName"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            style="@style/text_view_inside_linear_layout"
             android:hint="@string/set_report_template" />
 
         <Button
@@ -49,17 +46,13 @@
 
             <Button
                 android:id="@+id/buttonSendReport"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                style="@style/button_inside_linear_layout"
                 android:enabled="false"
                 android:text="@string/send" />
 
             <Button
                 android:id="@+id/cancelButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                style="@style/button_inside_linear_layout"
                 android:enabled="true"
                 android:text="@string/cancel" />
         </LinearLayout>
