@@ -82,11 +82,12 @@ public class SchemaHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + QuestionTable.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + ReportTable.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + ReportTemplateTable.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + ReportTemplateQuestionTable.TABLE_NAME);
 		onCreate(db);
 	}
 
 	// Wrapper method for adding a client
-	public long addClient(String clientName, int phoneNumber, String address,
+	public long addClient(String clientName, Long phoneNumber, String address,
 					String contactName) {
 		ContentValues cv = new ContentValues();
 		cv.put(ClientTable.NAME, clientName);
