@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.diplomadoUNAL.geosalesman.database.PopulateWithExamples;
+import com.diplomadoUNAL.geosalesman.database.SchemaHelper;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,20 +37,6 @@ public class GeoSalesman extends Activity implements OnItemClickListener {
 						getResources().getString(
 										R.string.new_report_short_description));
 		data.add(datum);
-
-		Map<String, String> datum2 = new HashMap<String, String>(2);
-		datum2.put("Title", getResources().getString(R.string.stored_report));
-		datum2.put("Description",
-						getResources().getString(
-										R.string.stored_report_short_description));
-		data.add(datum2);
-
-		Map<String, String> datum3 = new HashMap<String, String>(2);
-		datum3.put("Title", getResources().getString(R.string.send_reports));
-		datum3.put("Description",
-						getResources().getString(
-										R.string.send_reports_short_description));
-		data.add(datum3);
 
 		Map<String, String> datum4 = new HashMap<String, String>(2);
 		datum4.put("Title", getResources().getString(R.string.settings));
@@ -79,11 +68,10 @@ public class GeoSalesman extends Activity implements OnItemClickListener {
 						.getText();
 
 		if (selectedOption
-						.equals(getResources().getString(R.string.new_report))){
+						.equals(getResources().getString(R.string.new_report))) {
 			Intent intent = new Intent(GeoSalesman.this, AddNewReport.class);
 			startActivity(intent);
-		}
-		else if (selectedOption.equals(getResources().getString(
+		} else if (selectedOption.equals(getResources().getString(
 						R.string.stored_report)))
 			Toast.makeText(GeoSalesman.this, selectedOption, Toast.LENGTH_LONG)
 							.show();

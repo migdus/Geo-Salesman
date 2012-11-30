@@ -1,0 +1,8 @@
+question_title,question_description,question,question_type,answer_options
+Color favorito,Determinar la preferencia de color para el cliente,¿Cuál es su color favorito?,questionTypeOpen,
+Recompra,Determinar si el cliente volvería a comprar otro producto,¿Volvería a comprar otro de nuestros productos?,questionTypeYesNo,yes|no
+,Determinar el número de empleados,Número de empleados en su departamento,questionTypeRange,5-500
+Opinión,Capturar opiniones del producto,¿Cuál es el aspecto que más le atrae de nuestros productos?,questionTypeOpen,
+Demostración,Detectar interés por el producto,¿Quisiera una muestra gratis de nuestro producto?,questionTypeYesNo,yes|no
+Destion,Determinar el destino del producto,¿A qué país le gustaría que le entregáramos su orden?,questionTypeOpen,
+Puntualidad,Verificar percepción de entrega oportuna del producto,¿Le llegó el pedido a tiempo?,questionTypeYesNo,yes|no

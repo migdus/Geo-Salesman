@@ -163,7 +163,7 @@ public class AddNewClient extends Activity {
 									.equals(AddNewQuestion.ACTIVITY_MODE_ADD_NEW)) {
 						// Save to database
 						long dbResult = schemaHelper.addClient(clientNameData,
-										Integer.parseInt(phoneNumberData),
+										Long.parseLong(phoneNumberData),
 										addressData, contactNameData);
 						if (dbResult < 0) {
 							Toast.makeText(AddNewClient.this,

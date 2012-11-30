@@ -16,6 +16,9 @@
     <string name="clients_settings_short_description">Add, remove and edit clients</string>
     <string name="report_templates">Report templates</string>
     <string name="report_templates_settings_short_description">Add, remove and edit report templates</string>
+    <string name="reload_database">Reload database</string>
+    <string name="reload_database_successfull">Database reloaded successfully</string>
+     <string name="reload_database_short_description">Clears and reloads example data into the app</string>
     <string name="activity_crud_questions_title">Questions</string>
     <string name="activity_crud_clients_title">Clients</string>
     <string name="activity_crud_report_templates_title">Report Templates</string>

@@ -17,6 +17,8 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.TwoLineListItem;
 
+import com.diplomadoUNAL.geosalesman.database.PopulateWithExamples;
+
 public class Settings extends Activity {
 
 	@Override
@@ -48,6 +50,13 @@ public class Settings extends Activity {
 						getResources().getString(
 										R.string.report_templates_settings_short_description));
 		data.add(datum2);
+
+		Map<String, String> datum5 = new HashMap<String, String>(2);
+		datum5.put("Title", getResources().getString(R.string.reload_database));
+		datum5.put("Description",
+						getResources().getString(
+										R.string.reload_database_short_description));
+		data.add(datum5);
 
 		SimpleAdapter adapter = new SimpleAdapter(this, data,
 						android.R.layout.simple_list_item_2, new String[] {
@@ -121,9 +130,16 @@ public class Settings extends Activity {
 																	R.string.activity_crud_report_templates_title));
 					// start intent activity
 					startActivityForResult(intent, 1);
-				
-				}
 
+				} else if (selectedOption.equals(getResources().getString(
+								R.string.reload_database))) {
+					
+					PopulateWithExamples.populateDatabase(Settings.this);
+					Toast.makeText(Settings.this,
+									getResources().getString(
+													R.string.reload_database_successfull),
+									Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 	}
