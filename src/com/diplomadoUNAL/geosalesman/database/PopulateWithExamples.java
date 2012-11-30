@@ -9,9 +9,8 @@ import android.content.Context;
 import au.com.bytecode.opencsv.CSVReader;
 
 public class PopulateWithExamples {
-	public static void populateDatabase(
-					Context context) {
-		SchemaHelper schemaHelper=new SchemaHelper(context);
+	public static void populateDatabase(Context context) {
+		SchemaHelper schemaHelper = new SchemaHelper(context);
 		schemaHelper.onUpgrade(schemaHelper.getWritableDatabase(), 1, 1);
 		String[] files = { "clients_example.csv", "questions_example.csv" };
 		for (int i = 0; i < files.length; i++) {
@@ -19,7 +18,7 @@ public class PopulateWithExamples {
 			try {
 
 				InputStream is = context.getAssets().open(fileName);
-				InputStreamReader csvStreamReader = new InputStreamReader(is);
+				InputStreamReader csvStreamReader = new InputStreamReader(is,"UTF-8");
 				CSVReader csvReader = new CSVReader(csvStreamReader);
 				String[] line;
 

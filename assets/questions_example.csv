@@ -1,8 +1,8 @@
 question_title,question_description,question,question_type,answer_options
-Color favorito,Determinar la preferencia de color para el cliente,ÀCu‡l es su color favorito?,questionTypeOpen,
-Recompra,Determinar si el cliente volver’a a comprar otro producto,ÀVolver’a a comprar otro de nuestros productos?,questionTypeYesNo,yes|no
-,Determinar el nœmero de empleados,Nœmero de empleados en su departamento,questionTypeRange,5-500
-Opini—n,Capturar opiniones del producto,ÀCu‡l es el aspecto que m‡s le atrae de nuestros productos?,questionTypeOpen,
-Demostraci—n,Detectar interŽs por el producto,ÀQuisiera una muestra gratis de nuestro producto?,questionTypeYesNo,yes|no
-Destion,Determinar el destino del producto,ÀA quŽ pa’s le gustar’a que le entreg‡ramos su orden?,questionTypeOpen,
-Puntualidad,Verificar percepci—n de entrega oportuna del producto,ÀLe lleg— el pedido a tiempo?,questionTypeYesNo,yes|no
+Color favorito,Determinar la preferencia de color para el cliente,Â¿CuÃ¡l es su color favorito?,questionTypeOpen,
+Recompra,Determinar si el cliente volverÃ­a a comprar otro producto,Â¿VolverÃ­a a comprar otro de nuestros productos?,questionTypeYesNo,yes|no
+Empleados,Determinar el nÃºmero de empleados,NÃºmero de empleados en su departamento,questionTypeRange,5-500
+OpiniÃ³n,Capturar opiniones del producto,Â¿CuÃ¡l es el aspecto que mÃ¡s le atrae de nuestros productos?,questionTypeOpen,
+DemostraciÃ³n,Detectar interÃ©s por el producto,Â¿Quisiera una muestra gratis de nuestro producto?,questionTypeYesNo,yes|no
+Destion,Determinar el destino del producto,Â¿A quÃ© paÃ­s le gustarÃ­a que le entregÃ¡ramos su orden?,questionTypeOpen,
+Puntualidad,Verificar percepciÃ³n de entrega oportuna del producto,Â¿LlegÃ³ el pedido a tiempo?,questionTypeYesNo,yes|no
